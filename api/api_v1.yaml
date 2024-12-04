@@ -1,0 +1,232 @@
+openapi: 3.0.2
+info:
+  title: Piškvorky Game API
+  version: '1.0'
+  description: Definice API pro správu piškvorkových her.
+servers:
+  - url: 'http://{subdomain}.app.tourdeapp.cz/api/v1'
+    variables:
+      subdomain:
+        default: ZmxhZ3tjNG4teTB1LXMzMy1tM30=
+paths:
+  /games:
+    post:
+      summary: Vytvoří novou hru
+      description: 'Nápověda: Vede na jednoduchý INSERT statement do DB'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+          description: Hra úspěšně vytvořena.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+      requestBody:
+        required: true
+        description: Data hry k zanesení do záznamu.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameCreateUpdateRequest'
+    get:
+      summary: Získání všech záznamů všech her
+      description: 'Nápověda: SELECT *'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Game'
+                nullable: false
+                minItems: 0
+          description: Všechny záznamy her
+  /games/{uuid}:
+    parameters:
+      - in: path
+        name: uuid
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Dle ID najde hru a vrátí její údaje.
+      description: 'Nápověda: Jedná se o jednoduchý dotaz na DB, nalézt řádek, který odpovídá danému PK. Pokud žádný nebude nalezen, vrátí 404.'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+          description: Nalezený záznam
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Dle ID upraví záznam dané hry.
+      description: 'Nápověda: Aktualizuje existující hru. Pokud neexistuje, vrátí 404.'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+          description: Upravený záznam hry
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameCreateUpdateRequest'
+    delete:
+      description: 'Nápověda: Smaže existující hru. Pokud neexistuje, vrátí 404.'
+      summary: Dle ID odstraní záznam hry
+      responses:
+        '204':
+          description: Záznam byl úspěšně smazán
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  responses:
+    BadRequest:
+      description: Obsah požadavku neodpovídá specifikaci - například chybí nějaké povinné pole.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 400
+            message: "Bad request: ${reason}"
+    NotFound:
+      description: Daný zdroj nebyl nalezen.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 404
+            message: "Resource not found"
+    UnprocessableEntity:
+      description: Server rozumí požadavku (pole jsou správná), ale požadavek obsahuje sémantickou chybu - například je rozměr hry 3x3 a obsahuje znak '@'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: 422
+            message: "Semantic error: ${reason}"
+  schemas:
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
+      required:
+        - code
+        - message
+    DifficultyType:
+      type: string
+      enum: [beginner, easy, medium, hard, extreme]
+      description: Obtížnost hry
+      nullable: false
+      example: hard
+    BoardState:
+      type: array
+      minItems: 15
+      maxItems: 15
+      description: Herní plocha o rozměru 15x15
+      items:
+        type: array
+        minItems: 15
+        maxItems: 15
+        items:
+          type: string
+          enum: ['X', 'O', '']
+      example: [['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+          ['', '', '', '', 'O', 'O', '', '', '', '', '', '', '', '', ''],
+          ['', '', '', '', '', 'X', 'O', '', '', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', 'X', '', '', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '', 'X', '', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '', '', '', '', '', '', '', '', ''],
+          ['', '', '', '', '', '', '', '', '', '', '', '', '', '', '']
+          ]
+    Game:
+      type: object
+      properties:
+        uuid:
+          type: string
+          format: uuid
+          description: UUID hry
+          readOnly: true
+          nullable: false
+          example: 67fda282-2bca-41ef-9caf-039cc5c8dd69
+        createdAt:
+          type: string
+          format: date-time
+          description: Datum a čas vytvoření záznamu hry
+          readOnly: true
+          nullable: false
+        updatedAt:
+          type: string
+          format: date-time
+          description: Datum a čas poslední aktualizace záznamu hry
+          readOnly: true
+        name:
+          type: string
+          description: Název hry
+          nullable: false
+          example: Moje první hra
+        difficulty:
+          $ref: '#/components/schemas/DifficultyType'
+        gameState:
+          type: string
+          enum: [opening, midgame, endgame, unknown]
+          description: Stav hry
+          nullable: false
+          readOnly: true
+          example: midgame
+        board:
+          $ref: '#/components/schemas/BoardState'
+      required:
+        - uuid
+        - createdAt
+        - updatedAt
+        - name
+        - difficulty
+        - gameState
+        - board
+    GameCreateUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Název hry
+          nullable: false
+          example: Moje první hra
+        difficulty:
+          $ref: '#/components/schemas/DifficultyType'
+        board:
+          $ref: '#/components/schemas/BoardState'
+      required:
+        - name
+        - difficulty
+        - board
