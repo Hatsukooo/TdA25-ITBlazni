@@ -35,7 +35,7 @@ Aplikace bude přístupná na `http://127.0.0.1:8000`
 
 ```
 docker build . -t tda-django
-docker run -p 8080:80 -v ${PWD}:/app tda-django
+docker run -p 8080:80 -v C:\Users\1noc1\OneDrive\Plocha\TourDeAPP\TdA25-ITBlazni tda-django
 ```
 
 Aplikace bude přístupná na `http://127.0.0.1:8080`
