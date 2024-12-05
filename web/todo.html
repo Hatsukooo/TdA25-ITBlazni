@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/stylesheet.css' %}">
+    <link rel="shortcut icon" href="{% static 'css\TdA _ Ikonky\SVG\Idea\zarivka_idea_bile.svg' %}" type="image/x-icon">
+    <title>To-Do List</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="main-text">To-Do List MOTOLSKYCH UCNU</h1>
+        <p class="secondary-text">MILUJEME MOTOL</p>
+    </div>
+
+    <div id="todo-app">
+        <h2 class="todo-list-name">To-Do List</h2>
+        <div class="list">
+            <ul id="task-list">
+            </ul>
+        </div>
+        <div class="container">
+            <input type="text" id="task-input" class="task-input" placeholder="Meno ulohy">
+            <button id="add-task-btn" class="add-task">
+                <span>Pridať ulohu</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="{% static 'script.js' %}"></script>
+</body>
+</html>
