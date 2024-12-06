@@ -5,7 +5,7 @@ const taskList = document.getElementById("task-list");
 addTaskBtn.addEventListener("click", function () {
     const taskText = taskInput.value.trim();
     if (taskText === "") {
-        alert("Please enter a task!");
+        alert("Prosím přidejte úkol");
         return;
     }
 
