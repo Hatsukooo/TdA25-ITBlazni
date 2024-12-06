@@ -10,7 +10,7 @@ COPY Pipfile .
 COPY Pipfile.lock .
 
 RUN pipenv install --system --deploy
-RUN pip install rest_framework
+RUN pip install djangorestframework
 COPY . .
 
 EXPOSE 80
