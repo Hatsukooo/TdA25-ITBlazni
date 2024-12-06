@@ -18,3 +18,9 @@ addTaskBtn.addEventListener("click", function () {
         taskList.removeChild(newTask);
     });
 });
+
+
+function greet() {
+    console.log("Co to tady děláš????");
+}
+greet();
