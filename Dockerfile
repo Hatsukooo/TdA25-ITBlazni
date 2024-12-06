@@ -10,6 +10,7 @@ COPY Pipfile .
 COPY Pipfile.lock .
 
 RUN pipenv install --system --deploy
+RUN pip install rest_framework
 COPY . .
 
 EXPOSE 80
