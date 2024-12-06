@@ -20,7 +20,7 @@ addTaskBtn.addEventListener("click", function () {
 });
 
 
-function greet() {
+function sus() {
     console.log("Co to tady děláš????");
 }
-greet();
+sus();
