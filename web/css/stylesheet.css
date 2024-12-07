@@ -1,9 +1,10 @@
-*{
+* {
   font-family: 'Dosis', sans-serif;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  font-family: 'Dosis', sans-serif;
   color: #ffffff;
   margin: 0;
   padding: 0;
@@ -14,6 +15,10 @@ body {
   background-size: 3.2rem;
   background-position: 25px 25px;
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .center-logo {
@@ -34,14 +39,13 @@ body {
   padding: 10px;
   background-color: rgba(26, 26, 26, 0);
   position: absolute;
-  bottom: 0%;
+  bottom: 5%;
   left: 50%;
   transform: translateX(-50%);
-  
+  width: 100%;
 }
 
-
-/* Styl tlačítek */
+/* Button Styling */
 .btn {
   display: inline-block;
   outline: none;
@@ -54,13 +58,10 @@ body {
   letter-spacing: 0.16px;
   line-height: 1.29;
   color: #0f62fe;
-  font-weight: 400;
-  border-radius: 8px; /* Kulaté rohy */
-  transition: background 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   font-weight: 600;
-  font-size: large;
-  font-family: 'Dosis', sans-serif;
-  text-decoration: none;  
+  border-radius: 8px;
+  transition: background 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  text-decoration: none;
 }
 
 .btn:hover {
@@ -68,22 +69,21 @@ body {
   color: #fff;
 }
 
-/* Hlavní text */
+/* Main Text Styling */
 .main-text {
   color: #0070BB;
   margin: 0;
-  font-family: 'Dosis', sans-serif;
   font-weight: 700;
   font-size: 3em;
   text-align: center;
   pointer-events: none;
 }
 
-/* Vodoznak */
+/* Watermark Styling */
 .watermark {
   color: #0070BB;
   position: absolute;
-  bottom: 0%;
+  bottom: 0;
   left: 1%;
   font-weight: 500;
   font-size: 1rem;
@@ -92,29 +92,48 @@ body {
   pointer-events: none;
 }
 
-
-/* Odkaz ve stylu tlačítka */
-a.corner-button {
-  text-decoration: none;
-  color: #F6F6F6;
-  background-color: #395A9A;
-  border: 2px solid #F6F6F6;
-  border-radius: 10px;
-  padding: 12px 20px;
-  display: inline-block;
-  text-align: center;
-  transition: 0.75s ease;
-  margin-bottom: 20px;
-}
-
-a.corner-button:hover {
-  color: #ffffff;
-  background-color: #724479;
-  border-color: #F6F6F6;
-}
-
+/* Font face for 'Dosis' */
 @font-face {
   font-family: 'Dosis';
   src: url('font/Dosis-Regular.ttf') format('truetype');
   font-style: normal;
+}
+
+@media (max-width: 768px) {
+  .main-text {
+    font-size: 2em; 
+  }
+
+  .btn {
+    padding: 10px 15px;
+    font-size: 16px; 
+  }
+
+  .center-logo {
+    width: 150px;
+    height: auto;
+  }
+
+  .menu {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .watermark {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-text {
+    font-size: 1.5em;
+  }
+  .btn {
+    width: 80%; 
+  }
+  .center-logo {
+    width: 130px;
+  }
+  .menu {
+    gap: 8px;
+  }
 }
