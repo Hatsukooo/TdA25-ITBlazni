@@ -5,7 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = os.path.join(BASE_DIR,'web')
 
 SECRET_KEY = 'django-insecure-i7sb9d-!peim6oa_l@cbjn19q7vd&28$(w1&c7go-n4j6xgl-t'
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ["26e7458d.app.deploy.tourde.app", "127.0.0.1", "localhost"]
 
 INSTALLED_APPS = [
@@ -75,8 +75,9 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = '/web/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'web')]
-
+STATIC_URL = 'web/'
+STATICFILES_DIRS = [TEMPLATE_DIR]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
