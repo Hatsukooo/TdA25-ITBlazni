@@ -21,7 +21,7 @@ if (document.body.id === "todo") {
     });
 }
 
-function sus() {
+function Ahoj() {
     console.log("Co to tady děláš????");
 }
-sus();
+Ahoj();

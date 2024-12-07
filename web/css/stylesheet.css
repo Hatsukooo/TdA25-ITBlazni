@@ -88,8 +88,6 @@ input.task-input:focus {
     border-color: #F6F6F6;
 }
 
-
-
 @font-face {
     font-family: 'Dosis';
     src: url('font/Dosis-Regular.ttf') format('truetype');
