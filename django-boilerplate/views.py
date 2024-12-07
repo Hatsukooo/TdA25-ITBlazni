@@ -5,8 +5,8 @@ from django.http import JsonResponse
 class page(TemplateView):
     template_name = 'main.html'
     
-class todo(TemplateView):
-    template_name = 'todo.html'    
+class game(TemplateView):
+    template_name = 'game.html'
 
 def api_view(request):
     return JsonResponse({"organization": "Student Cyber Games"})

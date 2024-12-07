@@ -6,28 +6,18 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'css\stylesheet.css' %}" type="text/css">
     <link rel="shortcut icon" href="{% static 'css\TdA _ Ikonky\SVG\Idea\zarivka_idea_bile.svg' %}" type="image/x-icon">
-    <title>ITB - To-Do List</title>
+    <title>Hmmmm Piškvorky</title>
 </head>
-<body id="todo">
+<body id="game">
     <div class="container">
-        <h1 class="main-text">To-Do List MOTOLSKÝCH UČŇŮ</h1>
+        <h1 class="main-text">Piškvorkové Úlohhy</h1>
         <p class="secondary-text">MILUJEME PRŮMYSL NA MOTOLE</p>
     </div>
-    <div id="todo-app"> 
-
-        <h2 class="todo-list-name">To-Do List</h2>
-        <div class="list">
-            <ul id="task-list">
-            </ul>
-        </div>
+    <div id="game-app">
         <div class="container">
-            <input type="text" id="task-input" class="task-input" placeholder="Jméno úlohy"></input>
             <a href="{% url 'home' %}" class="corner-button">
                 <span>Domů</span>
             </a>
-            <button id="add-task-btn" class="add-task">
-                <span>Přidat úlohu</span>
-            </button>
         </div>
     </div>
 

@@ -3,7 +3,12 @@ body {
   color: #ffffff;
   margin: 0;
   padding: 0;
-  background-color: #0070BB;
+  background-color: #1A1A1A;
+  background-image: url('TdA_Logo/PNG/Think-different-Academy_LOGO_bily.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: 3.2rem;
+  background-position: 25px 25px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -18,6 +23,7 @@ body {
 }
 
 h1.main-text {
+  color: #0070BB;
   margin: 0;
   font-family: 'Dosis', sans-serif;
   font-weight: 700;
@@ -34,6 +40,7 @@ h2.todo-list-name {
 }
 
 p.secondary-text {
+  color: #0070BB;
   margin-top: 15px;
   font-weight: 500;
   font-size: 2em;
@@ -42,7 +49,7 @@ p.secondary-text {
 a.corner-button {
   text-decoration: none;
   color: #F6F6F6;
-  background-color: #E31837;
+  background-color: #395A9A;
   border: 2px solid #F6F6F6;
   border-radius: 10px;
   padding: 12px 20px;
@@ -58,101 +65,8 @@ a.corner-button:hover {
   border-color: #F6F6F6;
 }
 
-button.add-task {
-  text-decoration: none;
-  color: #F6F6F6;
-  background-color: #E31837;
-  border: 2px solid #F6F6F6;
-  border-radius: 10px;
-  padding: 12px 20px;
-  display: inline-block;
-  text-align: center;
-  transition: 0.75s ease;
-}
-
-button.add-task:hover {
-  color: #ffffff;
-  background-color: #724479;
-  border-color: #F6F6F6;
-}
-
-input.task-input {
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-input.task-input:focus {
-  outline: none;
-  border-color: #F6F6F6;
-}
-
 @font-face {
   font-family: 'Dosis';
   src: url('font/Dosis-Regular.ttf') format('truetype');
   font-style: normal;
-}
-
-
-/* TodoList */
-*,
-*::before,
-*::after {
-box-sizing: border-box;
-}
-
-:root {
-  --container-height: 498px;
-}
-
-section {
-position: relative;
-padding-right: 50px;
-timeline-scope: --listTimeline;
-}
-
-.list {
-max-height: var(--container-height);
-border: 2px solid #37392e;
-border-radius: 5px;
-scroll-snap-type: y mandatory;
-overscroll-behavior-y: contain;
-overflow-x: hidden;
-overflow-y: auto;
-scroll-timeline: --listTimeline block;
-}
-
-ul {
-margin: 0;
-padding: 0;
-list-style: none;
-background: #eee5e5;
-}
-
-li {
-padding: 20px;
-border-top: 1px solid #ccc;
-scroll-snap-align: start;
-color: #000;
-}
-
-li:first-child {
-border: 0;
-}
--webkit-scrollbar {
-width: 10px;
-}
-
-::-webkit-scrollbar-track {
-background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-background: #28afb0;
-border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-background: #F6F6F6;
 }
