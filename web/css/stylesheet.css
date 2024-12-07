@@ -3,7 +3,7 @@ body {
     color: #ffffff;
     margin: 0;
     padding: 0;
-    background-color: #130535;
+    background-color: #0070BB;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -41,8 +41,9 @@ p.secondary-text {
 
 a.corner-button {
     text-decoration: none;
-    color: #25ccf7;
-    border: 2px solid #25ccf7;
+    color: #F6F6F6;
+    background-color: #E31837;
+    border: 2px solid #F6F6F6;
     border-radius: 10px;
     padding: 12px 20px;
     display: inline-block;
@@ -53,14 +54,15 @@ a.corner-button {
 
 a.corner-button:hover {
     color: #ffffff;
-    background-color: #1b9cfc;
-    border-color: #1b9cfc;
+    background-color: #724479;
+    border-color: #F6F6F6;
 }
 
 button.add-task {
     text-decoration: none;
-    color: #25ccf7;
-    border: 2px solid #25ccf7;
+    color: #F6F6F6;
+    background-color: #E31837;
+    border: 2px solid #F6F6F6;
     border-radius: 10px;
     padding: 12px 20px;
     display: inline-block;
@@ -70,8 +72,8 @@ button.add-task {
 
 button.add-task:hover {
     color: #ffffff;
-    background-color: #1b9cfc;
-    border-color: #1b9cfc;
+    background-color: #724479;
+    border-color: #F6F6F6;
 }
 
 input.task-input {
@@ -83,7 +85,7 @@ input.task-input {
 
 input.task-input:focus {
     outline: none;
-    border-color: #25ccf7;
+    border-color: #F6F6F6;
 }
 
 
@@ -154,6 +156,6 @@ li:first-child {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #19647e;
+  background: #F6F6F6;
 }
   
