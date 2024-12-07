@@ -10,8 +10,6 @@ COPY Pipfile .
 COPY Pipfile.lock .
 
 RUN pipenv install --system --deploy
-RUN pip install django
-RUN pip install djangorestframework
 COPY . .
 
 EXPOSE 80
