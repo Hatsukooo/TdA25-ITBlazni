@@ -1,3 +1,7 @@
+*{
+  font-family: 'Dosis', sans-serif;
+}
+
 body {
   font-family: 'Dosis', sans-serif;
   color: #ffffff;
@@ -9,19 +13,62 @@ body {
   background-attachment: fixed;
   background-size: 3.2rem;
   background-position: 25px 25px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
   height: 100vh;
 }
 
-.container {
-  display: flex;
-  flex-direction: column; 
-  align-items: center;
+.center-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: auto;
 }
 
+/* Menu */
+.menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  padding: 10px;
+  background-color: rgba(26, 26, 26, 0);
+  position: absolute;
+  bottom: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+  
+}
+
+
+/* Styl tlačítek */
+.btn {
+  display: inline-block;
+  outline: none;
+  cursor: pointer;
+  border: 1px solid #0f62fe;
+  text-align: center;
+  padding: 12px 20px;
+  background-color: transparent;
+  font-size: 14px;
+  letter-spacing: 0.16px;
+  line-height: 1.29;
+  color: #0f62fe;
+  font-weight: 400;
+  border-radius: 8px; /* Kulaté rohy */
+  transition: background 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  font-weight: 600;
+  font-size: large;
+  font-family: 'Dosis', sans-serif;
+  text-decoration: none;  
+}
+
+.btn:hover {
+  background-color: #395A9A;
+  color: #fff;
+}
+
+/* Hlavní text */
 .main-text {
   color: #0070BB;
   margin: 0;
@@ -29,15 +76,24 @@ body {
   font-weight: 700;
   font-size: 3em;
   text-align: center;
+  pointer-events: none;
 }
 
+/* Vodoznak */
 .watermark {
   color: #0070BB;
-  margin-top: 15px;
+  position: absolute;
+  bottom: 0%;
+  left: 1%;
   font-weight: 500;
-  font-size: 2em;
+  font-size: 1rem;
+  transform: translateY(-50%);
+  text-align: center;
+  pointer-events: none;
 }
 
+
+/* Odkaz ve stylu tlačítka */
 a.corner-button {
   text-decoration: none;
   color: #F6F6F6;

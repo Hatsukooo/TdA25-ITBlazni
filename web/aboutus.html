@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Hmmmm Piškvorky</title>
+    <title>^_^</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
     <link rel="stylesheet" href="{% static 'css\stylesheet.css' %}" type="text/css">
     <link rel="shortcut icon" href="{% static 'css\Ikonky\SVG\Idea\zarivka_idea_bile.svg' %}" type="image/x-icon">
 </head>
-<body>    
+<body>
     <div class="container">
-        <div class="main-text" onmousedown='return false;' onselectstart='return false;'>Hello TdA</div>
         <div class="watermark" onmousedown='return false;' onselectstart='return false;'>Created by ITBlázni</div>
         <div class="menu">
+            <a href="{% url 'game' %}" class="btn">Hrát</a>
             <a href="{% url 'home' %}" class="btn">Domů</a>
-            <a href="{% url 'aboutus' %}" class="btn">O Nás</a>
             <a href="https://tourde.app/" class="btn">TdA</a>
-          </div>
+        </div>
     </div>
     <script src="{% static 'js\script.js' %}"></script>
-    <img src="{% static 'css\Loga\Think-different-Academy_LOGO_textove-bile.png' %}" alt="Logo" class="center-logo" type="image/png" style="pointer-events: none; user-select: none; "></img>
 </body>
 </html>

@@ -10,21 +10,15 @@
 </head>
 <body>
     <div class="container">
-        <div class="main-text">Hello TdA</div>
-        <div class="watermark">Created by ITBlázni</div>
+        <div class="main-text" onmousedown='return false;' onselectstart='return false;'>Hello TdA</div>
+        <div class="watermark" onmousedown='return false;' onselectstart='return false;'>Created by ITBlázni</div>
         <div class="menu">
-            <button>Button 1</button>
-            <button>Button 2</button>
-            <button>Button 3</button>
-            <button>Button 4</button>
+            <a href="{% url 'game' %}" class="btn">Hrát</a>
+            <a href="{% url 'aboutus' %}" class="btn">O Nás</a>
+            <a href="https://tourde.app/" class="btn">TdA</a>
           </div>
     </div>
-
-    <!-- <div class="outbutton">
-        <a href="{% url 'game' %}" class="corner-button">
-            <span>Hrát</span>
-        </a>
-    </div> -->
     <script src="{% static 'js\script.js' %}"></script>
+    <img src="{% static 'css\Loga\Think-different-Academy_LOGO_textove-bile.png' %}" alt="Logo" class="center-logo" type="image/png" style="pointer-events: none; user-select: none; "></img>
 </body>
 </html>
