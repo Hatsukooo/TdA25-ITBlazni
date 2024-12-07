@@ -2,7 +2,7 @@ from pathlib import Path
 import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-TEMPLATE_DIR = os.path.join(BASE_DIR,'web')
+TEMPLATE_DIR = os.path.join(BASE_DIR,'web/')
 
 SECRET_KEY = 'django-insecure-i7sb9d-!peim6oa_l@cbjn19q7vd&28$(w1&c7go-n4j6xgl-t'
 DEBUG = True

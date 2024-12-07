@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 from django.http import JsonResponse
-from django.shortcuts import render
 
 class page(TemplateView):
     template_name = 'main.html'
