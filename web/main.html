@@ -1,26 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>ITBlázni</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
     <link rel="stylesheet" href="{% static 'css\stylesheet.css' %}" type="text/css">
     <link rel="shortcut icon" href="{% static 'css\Ikonky\SVG\Idea\zarivka_idea_bile.svg' %}" type="image/x-icon">
-    <title>ITBlázni</title>
 </head>
 <body>
-
     <div class="container">
-        <h1 class="main-text">Hello TdA</h1>
-        <p class="secondary-text">Created by ITBlázni</p>
+        <div class="main-text">Hello TdA</div>
+        <div class="watermark">Created by ITBlázni</div>
+        <div class="menu">
+            <button>Button 1</button>
+            <button>Button 2</button>
+            <button>Button 3</button>
+            <button>Button 4</button>
+          </div>
     </div>
 
-    <div class="outbutton">
+    <!-- <div class="outbutton">
         <a href="{% url 'game' %}" class="corner-button">
             <span>Hrát</span>
         </a>
-    </div>
-
+    </div> -->
     <script src="{% static 'js\script.js' %}"></script>
 </body>
 </html>
