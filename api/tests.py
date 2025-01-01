@@ -31,7 +31,7 @@ class GameAPITests(TestCase):
 
     def test_get_game_detail(self):
         """Test retrieving a single game through the API."""
-        response = self.client.get(f'/api/v1/games/{self.game.id}/')
+        response = self.client.get(f'/api/v1/games/{self.game.uuid}/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['name'], self.game.name)
 
@@ -42,7 +42,7 @@ class GameAPITests(TestCase):
             'difficulty': 'medium',
             'board': [[None]*15 for _ in range(15)],  # Updated to 15x15 empty board
         }
-        response = self.client.put(f'/api/v1/games/{self.game.id}/', updated_data, format='json')
+        response = self.client.put(f'/api/v1/games/{self.game.uuid}/', updated_data, format='json')
         if response.status_code != status.HTTP_200_OK:
             print(response.data)  # Debug information
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -51,7 +51,6 @@ class GameAPITests(TestCase):
 
     def test_delete_game(self):
         """Test deleting an existing game through the API."""
-        response = self.client.delete(f'/api/v1/games/{self.game.id}/')
+        response = self.client.delete(f'/api/v1/games/{self.game.uuid}/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Game.objects.count(), 0)  # After deletion, count should be 0
-
