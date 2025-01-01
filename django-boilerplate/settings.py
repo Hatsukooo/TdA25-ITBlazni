@@ -81,3 +81,9 @@ STATIC_URL = 'web/'
 STATICFILES_DIRS = [TEMPLATE_DIR]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+    ],
+}
