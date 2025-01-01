@@ -3,4 +3,4 @@ from .models import Game
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
-    list_display = ('name', 'difficulty', 'id')
+    list_display = ('name', 'difficulty', 'uuid')

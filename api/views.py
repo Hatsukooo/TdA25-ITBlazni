@@ -49,7 +49,3 @@ def game_detail(request, pk):
 @api_view(['GET'])
 def apicko(request):
     return JsonResponse({"organization": "Student Cyber Games"})
-
-class GameViewSet(viewsets.ModelViewSet):
-    queryset = Game.objects.all()
-    serializer_class = GameSerializer
