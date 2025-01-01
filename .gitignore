@@ -2,5 +2,8 @@ db.sqlite3
 
 local/
 .idea/
-theme/
-```
+
+.pytest_cache/
+api/__pycache__/
+django-boilerplate/.pytest_cache/
+django-boilerplate/__pycache__/

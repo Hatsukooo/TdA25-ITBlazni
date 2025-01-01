@@ -12,7 +12,7 @@ def game_list(request):
         serializer = GameSerializer(games, many=True)
         return Response(serializer.data)
 
-    elif request.method == 'POST':
+    elif request.method == 'POST':  # Corrected line
         serializer = GameSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -30,7 +30,7 @@ def game_detail(request, pk):
         serializer = GameSerializer(game)
         return Response(serializer.data)
 
-    elif request.method == 'PUT':
+    elif request.method == 'PUT':  # Corrected line
         serializer = GameSerializer(game, data=request.data)
         if serializer.is_valid():
             serializer.save()

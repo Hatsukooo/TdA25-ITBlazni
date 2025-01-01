@@ -6,7 +6,7 @@ TEMPLATE_DIR = os.path.join(BASE_DIR,'web')
 
 SECRET_KEY = 'django-insecure-i7sb9d-!peim6oa_l@cbjn19q7vd&28$(w1&c7go-n4j6xgl-t'
 DEBUG = True
-ALLOWED_HOSTS = ["26e7458d.app.deploy.tourde.app", "127.0.0.1", "localhost"]
+ALLOWED_HOSTS = ["26e7458d.app.deploy.tourde.app", "127.0.0.1", "localhost", "0.0.0.0"]
 
 INSTALLED_APPS = [
     'django.contrib.admin',

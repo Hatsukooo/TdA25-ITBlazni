@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 import uuid
 
 class Game(models.Model):
@@ -7,7 +8,7 @@ class Game(models.Model):
     difficulty = models.CharField(max_length=10, default='easy')
     board = models.JSONField(default=list)
     game_state = models.CharField(max_length=50, default='initial')
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):

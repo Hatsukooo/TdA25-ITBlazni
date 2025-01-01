@@ -11,13 +11,15 @@ class GameAPITests(TestCase):
         self.game_data = {
             'name': 'Tic-Tac-Toe',
             'difficulty': 'easy',
-            'board': [[None]*3 for _ in range(3)],  # Example 3x3 empty board
+            'board': [[None]*15 for _ in range(15)],  # Updated to 15x15 empty board
         }
         self.game = Game.objects.create(**self.game_data)
 
     def test_create_game(self):
         """Test the creation of a new game through the API."""
         response = self.client.post('/api/v1/games/', self.game_data, format='json')
+        if response.status_code != status.HTTP_201_CREATED:
+            print(response.data)  # Debug information
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Game.objects.count(), 2)
 
@@ -38,9 +40,11 @@ class GameAPITests(TestCase):
         updated_data = {
             'name': 'Updated Tic-Tac-Toe',
             'difficulty': 'medium',
-            'board': [[None]*3 for _ in range(3)],
+            'board': [[None]*15 for _ in range(15)],  # Updated to 15x15 empty board
         }
         response = self.client.put(f'/api/v1/games/{self.game.id}/', updated_data, format='json')
+        if response.status_code != status.HTTP_200_OK:
+            print(response.data)  # Debug information
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.game.refresh_from_db()
         self.assertEqual(self.game.name, 'Updated Tic-Tac-Toe')
@@ -50,3 +54,4 @@ class GameAPITests(TestCase):
         response = self.client.delete(f'/api/v1/games/{self.game.id}/')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Game.objects.count(), 0)  # After deletion, count should be 0
+
