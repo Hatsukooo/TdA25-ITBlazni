@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>^_^</title>
+    <title>About Us</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css\stylesheet.css' %}" type="text/css">
-    <link rel="shortcut icon" href="{% static 'css\Ikonky\SVG\Idea\zarivka_idea_bile.svg' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/stylesheet.css' %}" type="text/css">
+    <link rel="shortcut icon" href="{% static 'css/Ikonky/SVG/Idea/zarivka_idea_bile.svg' %}" type="image/x-icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 </head>
 <body>
     <div class="container">
@@ -17,7 +19,58 @@
             <a href="{% url 'home' %}" class="btn">Domů</a>
             <a href="https://tourde.app/" class="btn">TdA</a>
         </div>
+        
+        <div class="about-us" onmousedown='return false;' onselectstart='return false;'>
+            <div class="card">
+                <div class="card-image">
+                    <img src="{% static 'css/Ikonky/PNG/hatcyk.png' %}" alt="😮 nejde png">
+                </div>
+                <div class="card-header">Štefan Barát</div>
+                <div class="card-subheader">Zkušenosti</div>
+                <div class="card-text">
+                    <p><strong>Python: </strong>1 rok</p>
+                    <p><strong>Lua: </strong>5 let</p>
+                    <p><strong>O Mě: </strong>Jsem vývojář se zaměřením na programování v Lua, kde mám více než 5 let zkušeností. V posledním roce jsem se intenzivně věnoval Pythonu.</p>
+                </div>
+                <div class="card-socials">
+                    <div>
+                        <span class="card-socials-label">Discord</span>
+                        <span class="card-socials-text">hatsukooo</span>
+                        <a href="https://discordapp.com/users/853595898344374282" class="card-socials-text">Odkaz na Discord</a>
+                    </div>
+                    <div>
+                        <span class="card-socials-label">Github</span>
+                        <span class="card-socials-text">Hatsukooo</span>
+                        <a href="https://github.com/Hatsukooo" class="card-socials-text">Odkaz na Github</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-image">
+                    <img src="{% static 'css/Ikonky/PNG/marv.png' %}" alt="😮 nejde png">
+                </div>
+                <div class="card-header">xXx XxX</div>
+                <div class="card-subheader">Zkušenosti</div>
+                <div class="card-text" >
+                    <p><strong>Python: </strong>Marve doplň si to xddd a nezapomen ikonu</p>
+                    <p><strong>O Mě: </strong>Marve doplň si to xddd</p>
+                </div>
+                <div class="card-socials">
+                    <div>
+                        <span class="card-socials-label">Discord</span>
+                        <span class="card-socials-text" >marv140</span>
+                        <a href="https://discordapp.com/users/224214348476841985" class="card-socials-text">Odkaz na Discord</a>
+                    </div>
+                    <div>
+                        <span class="card-socials-label">Github</span>
+                        <span class="card-socials-text">marv140</span>
+                        <a href="https://github.com/Marv140" class="card-socials-text">Odkaz na Github</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <script src="{% static 'js\script.js' %}"></script>
+    <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>
