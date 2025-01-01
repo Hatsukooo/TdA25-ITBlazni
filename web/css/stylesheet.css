@@ -57,6 +57,7 @@ body {
   border-radius: 8px;
   transition: background 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .btn:hover {
@@ -65,7 +66,7 @@ body {
 }
 
 /* Main text */
-.main-text {
+.main-text { 
   color: #0070BB;
   margin: 0;
   font-weight: 700;
@@ -187,4 +188,41 @@ a.corner-button:hover {
   font-size: 1.1rem;
   color: #CCCCCC;
   margin-left: 10px;
+}
+
+@media (max-width: 768px) {
+  .main-text {
+    font-size: 2.5em;
+  }  
+  .watermark {
+    font-size: 0.5em;
+  }
+  .btn {
+    padding: 10px 20px;
+  }
+  .card {
+    width: 500px;
+    height: 500px;
+    margin-top: 50px;
+  }
+  .card-image img {
+    width: 128px;
+    height: 128px;
+  }
+  .card-header {
+    font-size: 1.5rem;
+  }
+  .card-subheader {
+    font-size: 1.2rem;
+  }
+  .card-text {
+    font-size: 1rem;
+  }
+  .card-socials-label {
+    font-size: 1rem;
+  }
+  .card-socials-text {
+    font-size: 0.9rem;
+  }
+
 }
