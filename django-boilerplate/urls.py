@@ -5,5 +5,5 @@ urlpatterns = [
     path('', views.page.as_view(), name='home'),
     path('game/', views.game.as_view(), name='game'),
     path('aboutus/', views.aboutus.as_view(), name='aboutus'),
-    path('api/v1/', include('api.urls'), name='api'),
+    path('api/', include('api.urls'), name='api'),
 ]
