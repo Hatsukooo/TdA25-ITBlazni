@@ -52,21 +52,21 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState[row][col] = currentPlayer;
 
         if (checkWin(row, col)) {
-            statusDiv.textContent = `Player ${currentPlayer} Wins!`;
+            statusDiv.textContent = `Hráč ${currentPlayer} vyhrál!`;
             gameActive = false;
             highlightWinningCells();
             return;
         }
 
         if (isDraw()) {
-            statusDiv.textContent = `It's a Draw!`;
+            statusDiv.textContent = `Remíza!`;
             gameActive = false;
             return;
         }
 
         // Switch player
         currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
-        statusDiv.textContent = `Current Player: ${currentPlayer}`;
+        statusDiv.textContent = `Na řadě je hráč: ${currentPlayer}`;
 
         // Optional: Call API for AI move
         /*
@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
     resetBtn.addEventListener('click', () => {
         currentPlayer = 'X';
         gameActive = true;
-        statusDiv.textContent = `Current Player: ${currentPlayer}`;
+        statusDiv.textContent = `Na řadě je hráč: ${currentPlayer}`;
         for (let row = 0; row < 15; row++) {
             for (let col = 0; col < 15; col++) {
                 gameState[row][col] = null;

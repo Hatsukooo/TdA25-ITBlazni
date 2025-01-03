@@ -1,0 +1,48 @@
+body {
+    font-family: 'Dosis', sans-serif;
+    background-color: #1A1A1A;
+    color: #ffffff;
+    text-align: center;
+    padding: 50px;
+}
+
+@font-face {
+    font-family: 'Dosis';
+    src: url('font/Dosis-Regular.ttf') format('truetype');
+    font-style: normal;
+}
+
+h1 {
+    font-size: 50px;
+}
+
+p {
+    font-size: 20px;
+}
+
+.container {
+    margin-top: 100px;
+}
+
+.home-button {
+    display: inline-block;
+    cursor: pointer;
+    border: 1px solid #395A9A;
+    text-align: center;
+    padding: 18px 28px;
+    background-color: transparent;
+    font-size: 14px;
+    letter-spacing: 0.16px;
+    line-height: 1.29;
+    color: #395A9A;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: background 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.home-button:hover {
+    background-color: #395A9A;
+    color: #ffffff;
+}
