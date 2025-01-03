@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
         development: "http://localhost:8000/api/v1/games/"
     };
 
-    const environment = "production";
+    const environment = "development";
     const apiUrl = apiUrls[environment];
 
     const levelList = document.getElementById("level-list");
@@ -49,9 +49,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div class="level-card">
                     <h3>Level #${index + 1}: ${level.name}</h3>
                     <p><strong>Obtížnost:</strong> ${level.difficulty}</p>
-                    <p><strong>Status:</strong> ${level.game_state}</p>
-                    <p><strong>Vytvořeno:</strong> ${new Date(level.created_at).toLocaleString()}</p>
-                    <p><strong>Aktualizováno:</strong> ${new Date(level.updated_at).toLocaleString()}</p>
+                    <p><strong>Status:</strong> ${level.gameState}</p>
+                    <p><strong>Vytvořeno:</strong> ${new Date(level.createdAt).toLocaleString()}</p>
+                    <p><strong>Aktualizováno:</strong> ${new Date(level.updatedAt).toLocaleString()}</p>
                     <a href="{% url 'game' %}?level=${level.uuid}" class="btn">Hrát Level</a>
                 </div>
             `;
