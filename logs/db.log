@@ -28,3 +28,28 @@ DEBUG 2025-01-03 06:15:01,605 utils 21692 34528 (0.000)
             WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
             ORDER BY name; args=None; alias=default
 DEBUG 2025-01-03 06:15:01,608 utils 21692 34528 (0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+DEBUG 2025-01-03 06:24:02,993 utils 3244 548 (0.000) 
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+DEBUG 2025-01-03 06:24:02,995 utils 3244 548 (0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+DEBUG 2025-01-03 06:26:14,148 utils 45308 34748 (0.000) 
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+DEBUG 2025-01-03 06:26:14,151 utils 45308 34748 (0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+DEBUG 2025-01-03 06:26:20,746 utils 36656 35308 (0.000) 
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+DEBUG 2025-01-03 06:26:20,749 utils 36656 35308 (0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+DEBUG 2025-01-03 06:28:26,107 utils 44900 29032 (0.000) 
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+DEBUG 2025-01-03 06:28:26,110 utils 44900 29032 (0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
+DEBUG 2025-01-03 06:30:33,987 utils 9296 47984 (0.000) 
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+DEBUG 2025-01-03 06:30:33,988 utils 9296 47984 (0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default

@@ -11,11 +11,15 @@ def game_list(request):
         try:
             games = Game.objects.all()
             serializer = GameSerializer(games, many=True)
-            return Response({'message': 'Data retrieved successfully', 'data': serializer.data}, 
-                          serializer.data, status=status.HTTP_200_OK)
+            return Response({
+                'message': 'Data retrieved successfully',
+                'data': serializer.data
+            }, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({'message': 'Internal server error', 'error': str(e)}, 
-                          status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({
+                'message': 'Internal server error',
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     elif request.method == 'POST':
         serializer = GameSerializer(data=request.data)
@@ -24,52 +28,75 @@ def game_list(request):
                 if not serializer.validated_data.get('uuid'):
                     serializer.validated_data['uuid'] = uuid.uuid4()
                 serializer.save()
-                return Response({'message': 'Game created successfully', 'data': serializer.data}, 
-                              serializer.data, status=status.HTTP_201_CREATED)
+                return Response({
+                    'message': 'Game created successfully',
+                    'data': serializer.data
+                }, status=status.HTTP_201_CREATED)
             except Exception as e:
-                return Response({'message': 'Internal server error', 'error': str(e)}, 
-                              status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response({'message': 'Validation error', 'errors': serializer.errors}, 
-                       status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+                return Response({
+                    'message': 'Internal server error',
+                    'error': str(e)
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({
+            'message': 'Validation error',
+            'errors': serializer.errors
+        }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def game_detail(request, pk):
     try:
         game = Game.objects.get(uuid=pk)
     except Game.DoesNotExist:
-        return Response({"message": "Resource not found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({
+            "message": "Resource not found"
+        }, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         try:
             serializer = GameSerializer(game)
-            return Response({'message': 'Data retrieved successfully', 'data': serializer.data}, 
-                          serializer.data, status=status.HTTP_200_OK)
+            return Response({
+                'message': 'Data retrieved successfully',
+                'data': serializer.data
+            }, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({'message': 'Internal server error', 'error': str(e)}, 
-                          status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({
+                'message': 'Internal server error',
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     elif request.method == 'PUT':
         serializer = GameSerializer(game, data=request.data)
         if serializer.is_valid():
             try:
                 serializer.save()
-                return Response({'message': 'Game updated successfully', 'data': serializer.data}, 
-                              serializer.data, status=status.HTTP_200_OK)
+                return Response({
+                    'message': 'Game updated successfully',
+                    'data': serializer.data
+                }, status=status.HTTP_200_OK)
             except Exception as e:
-                return Response({'message': 'Internal server error', 'error': str(e)}, 
-                              status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-        return Response({'message': 'Validation error', 'errors': serializer.errors}, 
-                       status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+                return Response({
+                    'message': 'Internal server error',
+                    'error': str(e)
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({
+            'message': 'Validation error',
+            'errors': serializer.errors
+        }, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
     elif request.method == 'DELETE':
         try:
             game.delete()
-            return Response({'message': 'Game deleted successfully'}, 
-                          status=status.HTTP_204_NO_CONTENT)
+            return Response({
+                'message': 'Game deleted successfully'
+            }, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
-            return Response({'message': 'Internal server error', 'error': str(e)}, 
-                          status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({
+                'message': 'Internal server error',
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 @api_view(['GET'])
 def apicko(request):
-    return Response({'organization': 'Student Cyber Games'}, status=status.HTTP_200_OK)
+    return Response({
+        'organization': 'Student Cyber Games'
+    }, status=status.HTTP_200_OK)
