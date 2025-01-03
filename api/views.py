@@ -23,7 +23,7 @@ def game_list(request):
                 if not serializer.validated_data.get('uuid'):
                     serializer.validated_data['uuid'] = uuid.uuid4()
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+                return Response({'message': 'Game created successfully', 'data': serializer.data}, status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({'message': 'Internal server error', 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
