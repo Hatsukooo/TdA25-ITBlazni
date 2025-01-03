@@ -186,7 +186,7 @@ a.corner-button:hover {
 
 @media (max-width: 768px) {
   .main-text {
-    font-size: 2.5em;
+    font-size: 1.9em;
   }  
   .watermark {
     font-size: 0.5em;
@@ -195,9 +195,8 @@ a.corner-button:hover {
     padding: 10px 20px;
   }
   .card {
-    width: 500px;
-    height: 500px;
-    margin-top: 50px;
+    width: 100%;
+    margin-bottom: 20px;
   }
   .card-image img {
     width: 128px;
@@ -218,7 +217,11 @@ a.corner-button:hover {
   .card-socials-text {
     font-size: 0.9rem;
   }
-
+  /* Add this rule to stack level cards vertically */
+  #level-list {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 /* Game */
