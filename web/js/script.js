@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
         development: "http://localhost:8000/api/v1/games/"
     };
 
-    const environment = "production"; // Change to "production" as needed
+    const environment = "production";
     const apiUrl = apiUrls[environment];
 
     const levelList = document.getElementById("level-list");
@@ -41,13 +41,10 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
 
-        levelList.innerHTML = ""; // Clear existing content
-
+        levelList.innerHTML = "";
         levels.forEach((level, index) => {
             const levelItem = document.createElement("li");
             levelItem.classList.add("level-item");
-
-            // Create the inner HTML for the level item
             levelItem.innerHTML = `
                 <div class="level-card">
                     <h3>Level #${index + 1}: ${level.name}</h3>
@@ -64,5 +61,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (levelList) {
         fetchLevels();
+    }
+
+    const textElement = document.getElementById("movingText");
+    if (textElement) {
+        let xPos = 0;
+        let yPos = 0;
+        let xSpeed = 1.0; 
+        let ySpeed = 1.0; 
+
+        function moveText() {
+            xPos += xSpeed;
+            yPos += ySpeed;
+            const maxX = window.innerWidth - textElement.offsetWidth;
+            const maxY = window.innerHeight - textElement.offsetHeight;
+            if (xPos <= 0 || xPos >= maxX) {
+                xSpeed = -xSpeed;
+            }
+            if (yPos <= 0 || yPos >= maxY) {
+                ySpeed = -ySpeed;
+            }
+            textElement.style.left = xPos + "px";
+            textElement.style.top = yPos + "px";
+            requestAnimationFrame(moveText);
+        }
+
+        moveText();
     }
 });
