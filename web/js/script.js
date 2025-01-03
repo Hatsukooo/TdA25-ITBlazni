@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
         development: "http://localhost:8000/api/v1/games"
     };
 
-    const environment = "production";
+    const environment = "development";
     const apiUrl = apiUrls[environment];
 
     const levelList = document.getElementById("level-list");
@@ -48,11 +48,11 @@ document.addEventListener("DOMContentLoaded", function () {
             levelItem.innerHTML = `
                 <div class="level-card">
                     <h3>LEVEL #${index + 1}</h3>
-                    <p class="level-name"><strong>Název:</strong> ${level.name}</p>
-                    <p><strong>Obtížnost:</strong> ${level.difficulty}</p>
-                    <p><strong>Status:</strong> ${level.gameState}</p>
-                    <p><strong>Vytvořeno:</strong> ${new Date(level.createdAt).toLocaleString()}</p>
-                    <p><strong>Upraveno:</strong> ${new Date(level.updatedAt).toLocaleString()}</p>
+                    <p><strong style="color:#AB2E58;">Název:</strong> ${level.name}</p>
+                    <p><strong style="color:#AB2E58;">Obtížnost:</strong> ${level.difficulty}</p>
+                    <p><strong style="color:#AB2E58;">Status:</strong> ${level.gameState}</p>
+                    <p><strong style="color:#AB2E58;">Vytvořeno:</strong> ${new Date(level.createdAt).toLocaleString()}</p>
+                    <p><strong style="color:#AB2E58;">Upraveno:</strong> ${new Date(level.updatedAt).toLocaleString()}</p>
                     <a href="/game/${level.uuid}/" class="btn">Hrát Level</a>
                 </div>
             `;
@@ -88,5 +88,52 @@ document.addEventListener("DOMContentLoaded", function () {
         }
 
         moveText();
+    }
+    
+    const loader = document.getElementById('loader');
+    window.addEventListener('load', () => {
+        loader.classList.add('hidden');
+    });
+
+    // Theme Toggle Functionality
+    const toggleThemeBtn = document.getElementById('toggleTheme');
+    const logoImg = document.querySelector('.center-logo');
+
+    // Function to update the logo based on theme
+    function updateLogo(theme) {
+        if (logoImg) {
+            if (theme === 'light') {
+                logoImg.src = logoImg.dataset.lightSrc;
+            } else {
+                logoImg.src = logoImg.dataset.darkSrc;
+            }
+        }
+    }
+
+    // Load theme from localStorage if available
+    if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.classList.add('light-theme');
+        toggleThemeBtn.classList.add('active');
+        updateLogo('light');
+    } else {
+        updateLogo('dark');
+    }
+
+    if (toggleThemeBtn) {
+        toggleThemeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('light-theme');
+            toggleThemeBtn.classList.toggle('active');
+
+            // Determine current theme
+            const isLight = document.documentElement.classList.contains('light-theme');
+            updateLogo(isLight ? 'light' : 'dark');
+
+            // Save theme preference
+            if (isLight) {
+                localStorage.setItem('theme', 'light');
+            } else {
+                localStorage.setItem('theme', 'dark');
+            }
+        });
     }
 });

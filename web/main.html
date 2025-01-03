@@ -16,9 +16,16 @@
             <a href="{% url 'game_list' %}" class="btn">Hrát</a>
             <a href="{% url 'aboutus' %}" class="btn">O Nás</a>
             <a href="https://tourde.app/" class="btn">TdA</a>
+            <button id="toggleTheme" class="btn">Změnit Barvy</button>
         </div>
     </div>
     <script src="{% static 'js/script.js' %}"></script>
-    <img src="{% static 'css/Loga/Think-different-Academy_LOGO_textove-bile.png' %}" alt="Logo" class="center-logo" type="image/png" style="pointer-events: none; user-select: none;">
+    <img src="{% static 'css/Loga/Think-different-Academy_LOGO_textove-bile.png' %}" 
+         data-light-src="{% static 'css/Loga/Think-different-Academy_LOGO_textove-cerne.png' %}" 
+         data-dark-src="{% static 'css/Loga/Think-different-Academy_LOGO_textove-bile.png' %}" 
+         alt="Logo" 
+         class="center-logo" 
+         type="image/png" 
+         style="pointer-events: none; user-select: none;">
 </body>
 </html>

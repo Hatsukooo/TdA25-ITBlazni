@@ -1,14 +1,14 @@
-// game.js
-
 document.addEventListener('DOMContentLoaded', () => {
     const grid = document.getElementById('grid');
     const statusDiv = document.getElementById('status');
     const resetBtn = document.getElementById('resetBtn');
     let currentPlayer = 'X';
     let gameActive = true;
-    const gameState = Array(15).fill(null).map(() => Array(15).fill(null));
+    const BOARD_SIZE = 15;
+    const WIN_CONDITION = 5;
+    let gameState = Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(null));
 
-    // Function to make an API call
+    // Function to make an API call (Optional for AI)
     async function callAPI(endpoint, data) {
         try {
             const response = await fetch(endpoint, {
@@ -26,8 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Initialize the grid
     function initializeGrid() {
         grid.innerHTML = '';
-        for (let row = 0; row < 15; row++) {
-            for (let col = 0; col < 15; col++) {
+        for (let row = 0; row < BOARD_SIZE; row++) {
+            for (let col = 0; col < BOARD_SIZE; col++) {
                 const cell = document.createElement('div');
                 cell.classList.add('cell');
                 cell.dataset.row = row;
@@ -43,8 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle cell click
     async function handleCellClick() {
         if (!gameActive) return;
-        const row = this.dataset.row;
-        const col = this.dataset.col;
+        const row = parseInt(this.dataset.row, 10);
+        const col = parseInt(this.dataset.col, 10);
 
         if (gameState[row][col] || this.textContent) return;
 
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState[row][col] = currentPlayer;
 
         if (checkWin(row, col)) {
-            statusDiv.textContent = `Hráč ${currentPlayer} vyhrál!`;
+            statusDiv.textContent = `Hráč ${currentPlayer} Vyhrál!`;
             gameActive = false;
             highlightWinningCells();
             return;
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (response && response.aiMove) {
             const { row: aiRow, col: aiCol } = response.aiMove;
-            const aiCell = grid.children[aiRow * 15 + aiCol];
+            const aiCell = grid.querySelector(`.cell[data-row="${aiRow}"][data-col="${aiCol}"]`);
             if (aiCell && !aiCell.textContent) {
                 aiCell.textContent = 'O';
                 gameState[aiRow][aiCol] = 'O';
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 currentPlayer = 'X';
-                statusDiv.textContent = `Current Player: ${currentPlayer}`;
+                statusDiv.textContent = `Na řadě je hráč: ${currentPlayer}`;
             }
         }
         */
@@ -106,77 +106,82 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Check for a win condition
     function checkWin(row, col) {
-        const directions = [
-            { dr: -1, dc: 0 }, // Up
-            { dr: 1, dc: 0 },  // Down
-            { dr: 0, dc: -1 }, // Left
-            { dr: 0, dc: 1 },  // Right
-            { dr: -1, dc: -1 },// Up-Left
-            { dr: -1, dc: 1 }, // Up-Right
-            { dr: 1, dc: -1 }, // Down-Left
-            { dr: 1, dc: 1 }   // Down-Right
-        ];
         const player = gameState[row][col];
-        let count = 1;
-        let winningCells = [[parseInt(row), parseInt(col)]];
+        if (!player) return false;
 
-        directions.forEach(dir => {
-            let r = parseInt(row) + dir.dr;
-            let c = parseInt(col) + dir.dc;
-            while (r >= 0 && r < 15 && c >= 0 && c < 15 && gameState[r][c] === player) {
+        const directions = [
+            { dr: 0, dc: 1 },
+            { dr: 1, dc: 0 },
+            { dr: 1, dc: 1 },
+            { dr: 1, dc: -1 }
+        ];
+
+        for (const { dr, dc } of directions) {
+            let count = 1;
+            let winningCells = [[row, col]];
+
+            let r = row + dr;
+            let c = col + dc;
+            while (r >= 0 && r < BOARD_SIZE && c >= 0 && c < BOARD_SIZE && gameState[r][c] === player) {
                 count++;
                 winningCells.push([r, c]);
-                r += dir.dr;
-                c += dir.dc;
+                r += dr;
+                c += dc;
             }
-        });
 
-        if (count >= 5) {
-            window.winningCells = winningCells; // Store for highlighting
-            return true;
+            r = row - dr;
+            c = col - dc;
+            while (r >= 0 && r < BOARD_SIZE && c >= 0 && c < BOARD_SIZE && gameState[r][c] === player) {
+                count++;
+                winningCells.push([r, c]);
+                r -= dr;
+                c -= dc;
+            }
+
+            if (count >= WIN_CONDITION) {
+                window.winningCells = winningCells;
+                return true;
+            }
         }
+
         return false;
     }
 
-    // Highlight winning cells
     function highlightWinningCells() {
         if (!window.winningCells) return;
         window.winningCells.forEach(([row, col]) => {
-            const index = row * 15 + col;
-            const cell = grid.children[index];
+            const cell = grid.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
             if (cell) {
-                cell.style.backgroundColor = '#27ae60';
-                cell.style.color = '#fff';
-                cell.classList.add('disabled');
+                cell.classList.add('winning-cell');
             }
         });
     }
 
-    // Check for a draw
     function isDraw() {
-        return gameState.every(row => row.every(cell => cell));
+        for (let row = 0; row < BOARD_SIZE; row++) {
+            for (let col = 0; col < BOARD_SIZE; col++) {
+                if (!gameState[row][col]) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
-    // Reset the game
-    resetBtn.addEventListener('click', () => {
+    function resetGame() {
         currentPlayer = 'X';
         gameActive = true;
         statusDiv.textContent = `Na řadě je hráč: ${currentPlayer}`;
-        for (let row = 0; row < 15; row++) {
-            for (let col = 0; col < 15; col++) {
-                gameState[row][col] = null;
-            }
-        }
-        const cells = document.querySelectorAll('.cell');
+        gameState = Array.from({ length: BOARD_SIZE }, () => Array(BOARD_SIZE).fill(null));
+        const cells = grid.querySelectorAll('.cell');
         cells.forEach(cell => {
             cell.textContent = '';
-            cell.style.backgroundColor = '#ecf0f1';
-            cell.style.color = '#2c3e50';
-            cell.classList.remove('disabled');
+            cell.classList.remove('winning-cell');
         });
         delete window.winningCells;
-    });
+    }
 
-    // Initialize the game on page load
+    resetBtn.addEventListener('click', resetGame);
+
     initializeGrid();
 });

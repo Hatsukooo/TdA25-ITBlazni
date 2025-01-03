@@ -1,26 +1,4 @@
-/* game.css */
-
-/* General Styles */
-body {
-    font-family: 'Dosis', sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #1A1A1A;
-    color: #F6F6F6;
-}
-
-@font-face {
-    font-family: 'Dosis';
-    src: url('font/Dosis-Regular.ttf') format('truetype');
-    font-style: normal;
-}
-
-h1 {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 1.2em;
-}
-
+/* General Game Styles */
 .status {
     text-align: center;
     margin: 10px 0;
@@ -29,69 +7,64 @@ h1 {
 
 .grid {
     display: grid;
-    grid-template-columns: repeat(15, 30px);
-    grid-template-rows: repeat(15, 30px);
-    gap: 2px;
+    grid-template-columns: repeat(15, var(--cell-size));
+    grid-template-rows: repeat(15, var(--cell-size));
+    gap: var(--grid-gap);
+    background-color: var(--background-color);
     padding: 10px;
     border-radius: 10px;
     justify-content: center;
+    margin: 0 auto 20px auto;
+    max-width: 100%;
+    overflow: auto;
 }
 
 .cell {
-    width: 30px;
-    height: 30px;
-    background-color: #1A1A1A;
+    width: var(--cell-size);
+    height: var(--cell-size);
+    background-color: var(--background-color);
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 1em;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s;
     user-select: none;
+    border: #E31837 1px solid;
     border-radius: 4px;
-    font-family: 'Dosis', sans-serif;
 }
 
 .cell:hover {
-    background-color: #1A1A1A;
+    background-color: #ddd;
     transform: scale(1.05);
 }
 
 .cell.disabled {
     cursor: not-allowed;
-    background-color: #1A1A1A;
+    background-color: #95a5a6;
 }
 
 .reset-btn {
-    display: inline-block;
-    cursor: pointer;
-    border: 1px solid #E31837;
-    text-align: center;
-    padding: 12px 20px;
-    background-color: transparent;
-    font-size: 14px;
-    letter-spacing: 0.16px;
-    line-height: 1.29;
-    color: #E31837;
-    font-weight: 600;
-    border-radius: 8px;
-    transition: background 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    text-decoration: none;
-    white-space: nowrap;
-    font-family: 'Dosis', sans-serif;
     display: block;
-    width: fit-content;
-    position: fixed;
-    bottom: 135px;
-    left: 50%;
-    transform: translateX(-50%);
+    margin: 0 auto 20px auto;
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: var(--background-color);
+    border: 1px solid #c0392b;
+    border-radius: var(--border-radius);
+    color: var(--text-color);
+    cursor: pointer;
 }
 
 .reset-btn:hover {
-    background-color: #E31837;
-    color: #ffffff;
+    background-color: #c0392b;
+    color: #fff;
+}
 
+/* Winning Cell */
+.winning-cell {
+    background-color: #27ae60 !important;
+    color: #ffff !important;
 }
 
 /* Responsive Styles */
