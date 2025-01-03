@@ -49,15 +49,6 @@ def game_detail(request, pk):
         
         if serializer.is_valid():
             try:
-                board = serializer.validated_data.get('board')
-
-                if len(board) != 15:
-                    return Response({"message": "Semantic error: Board must have exactly 15 rows."}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-
-                for row_index, row in enumerate(board):
-                    if len(row) != 15:
-                        return Response({"message": f"Semantic error: Row {row_index + 1} does not have exactly 15 cells."}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-
                 serializer.save()
                 return Response({'message': 'Game updated successfully', 'data': serializer.data}, status=status.HTTP_200_OK)
             except Exception as e:
@@ -71,8 +62,7 @@ def game_detail(request, pk):
             return Response({'message': 'Game deleted successfully'}, status=status.HTTP_204_NO_CONTENT)
         except Exception as e:
             return Response({'message': 'Internal server error', 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+        
 @api_view(['GET'])
 def apicko(request):
     return Response({'organization': 'Student Cyber Games'}, status=status.HTTP_200_OK)
-
