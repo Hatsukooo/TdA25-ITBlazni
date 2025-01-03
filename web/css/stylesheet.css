@@ -1,10 +1,3 @@
-* {
-  font-family: 'Dosis', sans-serif;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
 body {
   font-family: 'Dosis', sans-serif;
   color: #ffffff;
@@ -15,7 +8,7 @@ body {
   background-size: 3.2rem;
   background-position: 25px 25px;
   height: 100vh;
-  overflow: hidden; /* Prevents scrolling */
+  overflow: hidden;
 }
 
 .center-logo {
@@ -45,14 +38,14 @@ body {
 .btn {
   display: inline-block;
   cursor: pointer;
-  border: 1px solid #0f62fe;
+  border: 1px solid #395A9A;
   text-align: center;
   padding: 12px 20px;
   background-color: transparent;
   font-size: 14px;
   letter-spacing: 0.16px;
   line-height: 1.29;
-  color: #0f62fe;
+  color: #395A9A;
   font-weight: 600;
   border-radius: 8px;
   transition: background 0.2s ease-in-out, color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -124,6 +117,7 @@ a.corner-button:hover {
   padding: 20px;
   box-sizing: border-box;
   overflow: hidden;
+  z-index: 2;
 }
 
 .card {
@@ -164,7 +158,7 @@ a.corner-button:hover {
 
 .card-text {
   font-size: 1rem;
-  color: #CCCCCC;
+  color: #FFFFFF;
   margin: 5px 0;
   overflow-y: auto;
   flex-grow: 1;
@@ -186,7 +180,7 @@ a.corner-button:hover {
 
 .card-socials-text {
   font-size: 1.1rem;
-  color: #CCCCCC;
+  color: #FFFFFF;
   margin-left: 10px;
 }
 
@@ -228,83 +222,84 @@ a.corner-button:hover {
 }
 
 /* Game */
-
-.wrapper {
-  display: flex;
+.grid {
+  display: grid;
+  grid-template-columns: repeat(15, 40px);
+  grid-template-rows: repeat(15, 40px);
+  gap: 1px;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  width: auto;
-  text-align: center;
-}
-
-#game_board {
-  display: grid;
-  grid-gap: 0.5em;
-  grid-template-columns: repeat(3, 1fr);
-  width: 16em;
-  height: auto;
-
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-.square {
-  background: #2f76c7;
-  width: 5em;
-  height: 5em;
+.cell {
+  width: 40px;
+  height: 40px;
+  background-color: white;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 0.5em;
-  font-weight: 500;
-  color: white;
-  box-shadow: 0.025em 0.125em 0.25em rgba(0, 0, 0, 0.25);
-}
-
-.wrapper h3 {
-  color: #0070BB;
-  margin: 0;
-  font-weight: 300;
-  font-size: 2em;
-  pointer-events: none;
-  margin-top: 3em;
-}
-
-label {
   font-size: 20px;
-  color: #0a2c1a;
+  font-family: Arial, sans-serif;
+  cursor: pointer;
+  border: #E31837 1px solid;
+}
+.cell:hover {
+  background-color: #ddd;
 }
 
-input,
-select {
+.level-card {
+  display: flex;
+  flex-direction: column;
+  vertical-align: top;
+  width: 300px;
+  min-height: 300px;
+  background-color: #1A1A1A;
+  border: 2px solid #0070BB;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.level-card h3 {
+  color: #0070BB;
   margin-bottom: 10px;
-  width: 100%;
-  padding: 15px;
-  border: 1px solid #125a33;
-  font-size: 14px;
-  background-color: #71d19e;
-  color: white;
+  font-size: 1.5rem;
 }
 
-.button {
-  color: white;
-  white-space: nowrap;
-  background-color: #31d47d;
-  padding: 10px 20px;
-  border: 0;
-  border-radius: 2px;
-  transition: all 150ms ease-out;
-  margin: 0.5em;
-}
-
-#alert_move {
-  color: white;
-  margin: 0;
-  font-weight: 100;
+#movingText {
+  position: absolute;
   font-size: 1em;
-  pointer-events: none;
-  margin-top: 25.75em;
+  color: white;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
 }
+
+#level-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  list-style: none;
+  margin: 20px auto 0 auto;
+  padding: 0;
+  max-height: 82vh;
+  overflow-y: auto;
+}
+
+*::-webkit-scrollbar {
+  width: 5px;
+}
+*::-webkit-scrollbar-track {
+  background-color: #1A1A1A;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: #0070BB;
+  border-radius: 5px;
+}
+
