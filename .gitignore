@@ -10,3 +10,4 @@ django-boilerplate/.pytest_cache/
 django-boilerplate/__pycache__/
 /api/migrations
 *.pyc
+logs/
