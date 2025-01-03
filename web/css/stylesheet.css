@@ -184,44 +184,6 @@ a.corner-button:hover {
   margin-left: 10px;
 }
 
-@media (max-width: 768px) {
-  .main-text {
-    font-size: 1.9em;
-  }  
-  .watermark {
-    font-size: 0.5em;
-  }
-  .btn {
-    padding: 10px 20px;
-  }
-  .card {
-    width: 100%;
-    margin-bottom: 20px;
-  }
-  .card-image img {
-    width: 128px;
-    height: 128px;
-  }
-  .card-header {
-    font-size: 1.5rem;
-  }
-  .card-subheader {
-    font-size: 1.2rem;
-  }
-  .card-text {
-    font-size: 1rem;
-  }
-  .card-socials-label {
-    font-size: 1rem;
-  }
-  .card-socials-text {
-    font-size: 0.9rem;
-  }
-  #level-list {
-    flex-direction: column;
-    align-items: center;
-  }
-}
 
 /* Game */
 .grid {
@@ -327,3 +289,77 @@ a.corner-button:hover {
   border-radius: 5px;
 }
 
+@media (max-width: 768px) {
+  body {
+    background-size: 1.2rem;
+    background-position: 10px 20px;
+  }
+
+  .main-text {
+    font-size: 1.9em;
+  }  
+  .watermark {
+    font-size: 0.5em;
+  }
+  .btn {
+    padding: 10px 20px;
+  }
+  .card {
+    width: 300px;
+    height: 400px;
+  }
+  .card-image img {
+    width: 128px;
+    height: 128px;
+  }
+  .card-header {
+    font-size: 1.5rem;
+  }
+  .card-subheader {
+    font-size: 1.2rem;
+  }
+  .card-text {
+    font-size: 1rem;
+  }
+  .card-socials-label {
+    font-size: 1rem;
+  }
+  .card-socials-text {
+    font-size: 0.9rem;
+  }
+  #level-list {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 100px !important;
+  }
+  #level-list {
+    margin-top: 40px; 
+    padding: 10px 0;  
+  }
+  
+  #level-list .card {
+      width: 250px;                   
+  }
+  #level-list .card-header {
+    font-size: 1.3rem;
+  }
+
+  #level-list .card-subheader {
+      font-size: 1rem;
+  }
+
+  #level-list .card-text {
+      font-size: 0.9rem;
+  }
+  #movingText {
+    font-size: 0.5em;
+  }
+
+  .center-logo {
+    position: fixed !important;
+    bottom: 10px !important;
+    right: 10px !important;
+    width: 50px !important;
+    z-index: 1000 !important;
+  }
+}
