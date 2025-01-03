@@ -6,11 +6,11 @@ Ahoj();
 
 document.addEventListener("DOMContentLoaded", function () {
     const apiUrls = {
-        production: "https://26e7458d.app.deploy.tourde.app/api/v1/games",
+        // production: "https://26e7458d.app.deploy.tourde.app/api/v1/games",
         development: "http://localhost:8000/api/v1/games"
     };
 
-    const environment = "production";
+    const environment = "development";
     const apiUrl = apiUrls[environment];
 
     const levelList = document.getElementById("level-list");
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", function () {
             levelList.innerHTML = "<li>No levels available. <strong>DEV_TEST #1</strong></li>";
             return;
         }
-
+    
         levelList.innerHTML = "";
         levels.forEach((level, index) => {
             const levelItem = document.createElement("li");
@@ -51,8 +51,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     <p><strong>Obtížnost:</strong> ${level.difficulty}</p>
                     <p><strong>Status:</strong> ${level.gameState}</p>
                     <p><strong>Vytvořeno:</strong> ${new Date(level.createdAt).toLocaleString()}</p>
-                    <p><strong>Aktualizováno:</strong> ${new Date(level.updatedAt).toLocaleString()}</p>
-                    <a href="{% url 'game' %}?level=${level.uuid}" class="btn">Hrát Level</a>
+                    <p><strong>Upraveno:</strong> ${new Date(level.updatedAt).toLocaleString()}</p>
+                    <a href="/game/${level.uuid}/" class="btn">Hrát Level</a>
                 </div>
             `;
             levelList.appendChild(levelItem);

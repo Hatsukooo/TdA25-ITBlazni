@@ -42,6 +42,7 @@ RUN pipenv install --system --deploy
 
 # Install Django and other dependencies
 RUN pip install --upgrade pip django djangorestframework
+RUN pip install django-cors-headers
 
 # Verify installations
 RUN python -m django --version && sqlite3 --version

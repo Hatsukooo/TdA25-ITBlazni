@@ -2,7 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework.views import exception_handler
-from rest_framework.exceptions import ValidationErrors
+from rest_framework.exceptions import ValidationError
 from .models import Game
 from .serializer import GameSerializer
 from django.http import JsonResponse
