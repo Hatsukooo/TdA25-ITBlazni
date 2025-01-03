@@ -12,15 +12,20 @@ def game_list(request):
     if request.method == 'GET':
         games = Game.objects.all()
         serializer = GameSerializer(games, many=True)
-        return Response({'message': 'Data retrieved successfully','data': serializer.data}, status=status.HTTP_200_OK)
+        return Response({'message': 'Data retrieved successfully', 'data': serializer.data}, status=status.HTTP_200_OK)
 
     elif request.method == 'POST':
         serializer = GameSerializer(data=request.data)
         
         if serializer.is_valid():
-            serializer.save()
-            return Response({'message': 'Game created successfully', 'data': serializer.data}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+            try:
+                serializer.save()
+                return Response({'message': 'Game created successfully', 'data': serializer.data}, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                print(f"Error saving game: {e}")
+                return Response({'message': 'Internal server error', 'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
