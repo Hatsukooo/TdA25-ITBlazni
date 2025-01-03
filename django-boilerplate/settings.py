@@ -172,6 +172,16 @@ if not os.path.exists(LOGS_DIR):
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOWED_ORIGINS = [
     "https://26e7458d.app.deploy.tourde.app",
-    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8000",
     'http://localhost:8000',
+    "http://127.0.0.1:3000",
+    'http://localhost:3000',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://26e7458d.app.deploy.tourde.app',
+    "http://127.0.0.1:8000",
+    'http://localhost:8000',
+    "http://127.0.0.1:3000",
+    'http://localhost:3000',
 ]

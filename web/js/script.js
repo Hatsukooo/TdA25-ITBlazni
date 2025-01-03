@@ -6,11 +6,11 @@ Ahoj();
 
 document.addEventListener("DOMContentLoaded", function () {
     const apiUrls = {
-        // production: "https://26e7458d.app.deploy.tourde.app/api/v1/games",
+        production: "https://26e7458d.app.deploy.tourde.app/api/v1/games",
         development: "http://localhost:8000/api/v1/games"
     };
 
-    const environment = "development";
+    const environment = "production";
     const apiUrl = apiUrls[environment];
 
     const levelList = document.getElementById("level-list");
