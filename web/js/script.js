@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
         development: "http://localhost:8000/api/v1/games/"
     };
 
-    const environment = "production";
+    const environment = "development";
     const apiUrl = apiUrls[environment];
 
     const levelList = document.getElementById("level-list");
