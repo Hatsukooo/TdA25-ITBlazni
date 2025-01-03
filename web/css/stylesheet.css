@@ -217,7 +217,6 @@ a.corner-button:hover {
   .card-socials-text {
     font-size: 0.9rem;
   }
-  /* Add this rule to stack level cards vertically */
   #level-list {
     flex-direction: column;
     align-items: center;
@@ -257,9 +256,10 @@ a.corner-button:hover {
 .level-card {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   vertical-align: top;
   width: 300px;
-  min-height: 300px;
+  height: 400px;
   background-color: #1A1A1A;
   border: 2px solid #0070BB;
   border-radius: 15px;
@@ -268,10 +268,31 @@ a.corner-button:hover {
   overflow: hidden;
 }
 
+.level-card .level-name {
+  color: #0070BB;
+  margin-bottom: 15px;
+  font-size: 1.2rem;
+  overflow: hidden;                
+  text-overflow: ellipsis;        
+  white-space: nowrap;
+}
+
+.level-card .level-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
 .level-card h3 {
   color: #0070BB;
   margin-bottom: 10px;
   font-size: 1.5rem;
+  overflow: hidden;                
+  text-overflow: ellipsis;        
+  white-space: nowrap;
+  text-align: center; 
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 #movingText {

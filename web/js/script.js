@@ -47,7 +47,8 @@ document.addEventListener("DOMContentLoaded", function () {
             levelItem.classList.add("level-item");
             levelItem.innerHTML = `
                 <div class="level-card">
-                    <h3>Level #${index + 1}: ${level.name}</h3>
+                    <h3>LEVEL #${index + 1}</h3>
+                    <p class="level-name"><strong>Název:</strong> ${level.name}</p>
                     <p><strong>Obtížnost:</strong> ${level.difficulty}</p>
                     <p><strong>Status:</strong> ${level.gameState}</p>
                     <p><strong>Vytvořeno:</strong> ${new Date(level.createdAt).toLocaleString()}</p>
