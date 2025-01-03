@@ -10,7 +10,6 @@ class GameSerializer(serializers.ModelSerializer):
     GAME_STATE_CHOICES = ['opening', 'midgame', 'endgame']
     BOARD_SIZE = 15
     VALID_MOVES = ['X', 'O', '']
-    NAME_MAX_LENGTH = 100
 
     # Field definitions with custom error messages
     uuid = serializers.UUIDField(
@@ -23,39 +22,45 @@ class GameSerializer(serializers.ModelSerializer):
     createdAt = serializers.DateTimeField(read_only=True)
     updatedAt = serializers.DateTimeField(read_only=True)
     name = serializers.CharField(
-        max_length=NAME_MAX_LENGTH,
+        max_length=100,
         error_messages={
             'required': 'Game name is required.',
             'blank': 'Game name cannot be blank.',
-            'max_length': f'Game name cannot exceed {NAME_MAX_LENGTH} characters.',
+            'max_length': 'Game name cannot exceed 100 characters.',
             'invalid': 'Game name contains invalid characters.'
         }
     )
-    difficulty = serializers.CharField(
+    difficulty = serializers.ChoiceField(
+        choices=DIFFICULTY_CHOICES,
         error_messages={
             'required': 'Difficulty level is required.',
-            'invalid_choice': f'Difficulty must be one of: {", ".join(DIFFICULTY_CHOICES)}'
+            'invalid_choice': 'Difficulty must be one of: easy, medium, hard.'
         }
     )
-    gameState = serializers.CharField(
+    gameState = serializers.ChoiceField(
+        choices=GAME_STATE_CHOICES,
         error_messages={
             'required': 'Game state is required.',
-            'invalid_choice': f'Game state must be one of: {", ".join(GAME_STATE_CHOICES)}'
+            'invalid_choice': 'Game state must be one of: opening, midgame, endgame.'
         }
     )
     board = serializers.ListField(
         child=serializers.ListField(
-            child=serializers.CharField(max_length=1, allow_blank=True),
+            child=serializers.ChoiceField(choices=VALID_MOVES),
             min_length=BOARD_SIZE,
             max_length=BOARD_SIZE,
+            error_messages={
+                'min_length': f"Each row must have exactly {BOARD_SIZE} columns.",
+                'max_length': f"Each row must have exactly {BOARD_SIZE} columns.",
+                'invalid_choice': f"Each cell must be one of: {', '.join(VALID_MOVES)}."
+            }
         ),
         min_length=BOARD_SIZE,
         max_length=BOARD_SIZE,
         error_messages={
-            'required': 'Game board is required.',
-            'invalid': 'Invalid board format.',
-            'min_length': f'Board must be {BOARD_SIZE}x{BOARD_SIZE}.',
-            'max_length': f'Board must be {BOARD_SIZE}x{BOARD_SIZE}.'
+            'min_length': f"Board must have exactly {BOARD_SIZE} rows.",
+            'max_length': f"Board must have exactly {BOARD_SIZE} rows.",
+            'invalid': 'Board must be a 2D array.'
         }
     )
 
@@ -90,7 +95,7 @@ class GameSerializer(serializers.ModelSerializer):
         value = str(value).lower()
         if value not in self.DIFFICULTY_CHOICES:
             raise serializers.ValidationError(
-                f"Invalid difficulty. Must be one of: {', '.join(self.DIFFICULTY_CHOICES)}"
+                "Invalid difficulty. Must be one of: easy, medium, hard."
             )
         return value
 
@@ -99,70 +104,55 @@ class GameSerializer(serializers.ModelSerializer):
         value = str(value).lower()
         if value not in self.GAME_STATE_CHOICES:
             raise serializers.ValidationError(
-                f"Invalid game state. Must be one of: {', '.join(self.GAME_STATE_CHOICES)}"
+                "Invalid game state. Must be one of: opening, midgame, endgame."
             )
         return value
 
     def validate_board(self, value):
         """Validate board dimensions and content"""
         if not isinstance(value, list):
-            raise serializers.ValidationError({
-                'board': "Board must be a 2D array"
-            })
-        
+            raise serializers.ValidationError("Board must be a 2D array.")
+
         if len(value) != self.BOARD_SIZE:
-            raise serializers.ValidationError({
-                'board': f"Board must have exactly {self.BOARD_SIZE} rows"
-            })
+            raise serializers.ValidationError(f"Board must have exactly {self.BOARD_SIZE} rows.")
 
         x_count = 0
         o_count = 0
-        
+
         for row_idx, row in enumerate(value):
             if not isinstance(row, list):
-                raise serializers.ValidationError({
-                    'board': f"Row {row_idx + 1} must be a list"
-                })
-                
+                raise serializers.ValidationError(f"Row {row_idx + 1} must be a list.")
+            
             if len(row) != self.BOARD_SIZE:
-                raise serializers.ValidationError({
-                    'board': f"Row {row_idx + 1} must have exactly {self.BOARD_SIZE} columns"
-                })
-                
+                raise serializers.ValidationError(f"Row {row_idx + 1} must have exactly {self.BOARD_SIZE} columns.")
+            
             for col_idx, cell in enumerate(row):
-                if not isinstance(cell, str):
-                    raise serializers.ValidationError({
-                        'board': f"Cell at position [{row_idx + 1}, {col_idx + 1}] must be a string"
-                    })
-                    
-                if cell not in self.VALID_MOVES:
-                    raise serializers.ValidationError({
-                        'board': f"Invalid move '{cell}' at position [{row_idx + 1}, {col_idx + 1}]"
-                    })
-                    
                 if cell == 'X':
                     x_count += 1
                 elif cell == 'O':
                     o_count += 1
-
+                elif cell != '':
+                    raise serializers.ValidationError(f"Invalid move '{cell}' at position [{row_idx + 1}, {col_idx + 1}].")
+        
         # Validate move counts
         if abs(x_count - o_count) > 1:
-            raise serializers.ValidationError({
-                'board': "Invalid number of moves. The difference between X and O moves cannot exceed 1."
-            })
-
+            raise serializers.ValidationError("Invalid move sequence: difference between X and O moves cannot exceed 1.")
+        
         return value
 
     def validate(self, data):
         """Perform cross-field validation"""
         if data.get('gameState') == 'endgame':
-            # Additional endgame state validation logic here
-            pass
-            
+            # Example additional validation for endgame state
+            x_count = sum(row.count('X') for row in data.get('board', []))
+            o_count = sum(row.count('O') for row in data.get('board', []))
+            total_moves = x_count + o_count
+            if total_moves < 30:
+                raise serializers.ValidationError("Endgame state must have at least 30 moves.")
         return data
 
     def create(self, validated_data):
-        """Handle creation with automatic timestamp"""
+        """Handle creation with automatic timestamp and UUID"""
         if not validated_data.get('uuid'):
             validated_data['uuid'] = uuid.uuid4()
         validated_data['createdAt'] = timezone.now()
