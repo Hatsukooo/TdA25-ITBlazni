@@ -87,3 +87,82 @@ REST_FRAMEWORK = {
     ]
 }
 APPEND_SLASH = False
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        }
+    },
+    'handlers': {
+        'file_app': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/app.log',
+            'maxBytes': 1024*1024*5,
+            'backupCount': 5,
+            'formatter': 'verbose'
+        },
+        'file_error': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/error.log',
+            'maxBytes': 1024*1024*5,
+            'backupCount': 5,
+            'formatter': 'verbose'
+        },
+        'file_security': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/security.log',
+            'maxBytes': 1024*1024*5,
+            'backupCount': 5,
+            'formatter': 'verbose'
+        },
+        'file_db': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/db.log',
+            'maxBytes': 1024*1024*5,
+            'backupCount': 5,
+            'formatter': 'verbose'
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file_error'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'django.db.backends': {
+            'handlers': ['file_db'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+        'django.security': {
+            'handlers': ['file_security'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'api': {
+            'handlers': ['file_app', 'file_error', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        }
+    }
+}
+
+# Create logs directory
+LOGS_DIR = os.path.join(BASE_DIR, 'logs')
+if not os.path.exists(LOGS_DIR):
+    os.makedirs(LOGS_DIR)
