@@ -274,6 +274,7 @@ body {
   font-weight: 700;
   text-align: center;
   text-decoration: none;
+  z-index: 3;
 }
 
 /* Level List */

@@ -5,6 +5,12 @@
     font-size: 1.2em;
 }
 
+/* h1 {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 1.2em;
+} */
+
 .grid {
     display: grid;
     grid-template-columns: repeat(15, var(--cell-size));
