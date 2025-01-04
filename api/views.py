@@ -8,7 +8,6 @@ from .serializer import GameSerializer
 from django.http import JsonResponse
 
 @api_view(['GET', 'POST'])
-@api_view(['GET', 'POST'])
 def game_list(request):
     if request.method == 'GET':
         games = Game.objects.all()
@@ -21,31 +20,18 @@ def game_list(request):
         if serializer.is_valid():
             try:
                 board = serializer.validated_data.get('board')
-
-                if len(board) != BOARD_SIZE:
-                    return Response({"code": 422, "message": "Semantic error: Board must have exactly 15 rows."}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-
-                invalid_cells = []
-                for row_index, row in enumerate(board):
-                    if len(row) != BOARD_SIZE:
-                        invalid_cells.append(f"Row {row_index + 1} does not have exactly 15 cells.")
-                    for col_index, cell in enumerate(row):
-                        if cell not in VALID_CHARACTERS:
-                            invalid_cells.append(f"Row {row_index + 1}, Col {col_index + 1} has invalid value '{cell}'")
-
-                if invalid_cells:
-                    return Response({"code": 422, "message": f"Semantic error: {'; '.join(invalid_cells)}. "f"Only allowed characters: {', '.join(VALID_CHARACTERS)}."}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-
-                # Ensure gameState is correctly set
                 game_state = serializer.validated_data.get('gameState', 'opening')
+
                 serializer.save(gameState=game_state)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
             except Exception as e:
                 return Response(
-                    {"code": 500, "message": "Internal server error."},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                    {"code": 500, "message": "Internal server error."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
         else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])

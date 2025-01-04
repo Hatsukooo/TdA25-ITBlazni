@@ -26,10 +26,8 @@ class GameSerializer(serializers.ModelSerializer):
         return value
 
     def validate(self, data):
-        # Additional custom validations can be added here
-        # For example, starting player validation
-        # Assuming you have a field like 'startingPlayer'
-        starting_player = data.get('startingPlayer', None)
-        if starting_player not in ['X', 'O']:
-            raise serializers.ValidationError({"startingPlayer": "Starting player must be 'X' or 'O'."})
+        # Example: Validate starting player if applicable
+        # starting_player = data.get('startingPlayer', None)
+        # if starting_player not in ['X', 'O']:
+        #     raise serializers.ValidationError({"startingPlayer": "Starting player must be 'X' or 'O'."})
         return data

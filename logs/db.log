@@ -1,0 +1,5 @@
+DEBUG 2025-01-04 09:11:54,719 utils 9624 4524 (0.000) 
+            SELECT name, type FROM sqlite_master
+            WHERE type in ('table', 'view') AND NOT name='sqlite_sequence'
+            ORDER BY name; args=None; alias=default
+DEBUG 2025-01-04 09:11:54,722 utils 9624 4524 (0.000) SELECT "django_migrations"."id", "django_migrations"."app", "django_migrations"."name", "django_migrations"."applied" FROM "django_migrations"; args=(); alias=default
