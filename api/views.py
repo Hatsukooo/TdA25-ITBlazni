@@ -8,6 +8,7 @@ from .serializer import GameSerializer
 from django.http import JsonResponse
 
 @api_view(['GET', 'POST'])
+<<<<<<< HEAD
 def game_list(request):
     if request.method == 'GET':
         games = Game.objects.all()
@@ -37,6 +38,8 @@ def game_list(request):
             return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
         
 @api_view(['GET', 'POST'])
+=======
+>>>>>>> parent of 29936e3 (chore(api): peparation for phase 3)
 def game_list(request):
     if request.method == 'GET':
         games = Game.objects.all()
@@ -44,7 +47,11 @@ def game_list(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
+<<<<<<< HEAD
 >>>>>>> parent of 56f72bf (hotfix)
+=======
+        print("POST request received for game detail")
+>>>>>>> parent of 29936e3 (chore(api): peparation for phase 3)
         serializer = GameSerializer(data=request.data)
         print("SERIALIZER LOAD")
         
@@ -77,6 +84,7 @@ def game_list(request):
 
                 serializer.save()
                 print("Game updated successfully")
+<<<<<<< HEAD
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
             except Exception as e:
@@ -95,6 +103,15 @@ def game_list(request):
         else:
             return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 >>>>>>> parent of 56f72bf (hotfix)
+=======
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+            except Exception as e:
+                print(f"Semantic error: {str(e)}")
+                return Response({"code": 422, "message": f"Semantic error: {str(e)}"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+        return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+>>>>>>> parent of 29936e3 (chore(api): peparation for phase 3)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
