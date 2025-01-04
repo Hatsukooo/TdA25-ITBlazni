@@ -402,4 +402,7 @@ body {
   .about-us .card:last-child {
       margin-right: 0;
   }
+  .menu {
+    z-index: 1000;
+  }
 }
