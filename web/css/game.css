@@ -31,7 +31,8 @@
     cursor: pointer;
     user-select: none;
     border: #E31837 1px solid;
-    border-radius: 4px;
+    border-radius: var(--border-radius);
+    transition: transform 0.2s, background-color 0.2s;
 }
 
 .cell:hover {
@@ -44,6 +45,7 @@
     background-color: #95a5a6;
 }
 
+/* Reset Button Styles */
 .reset-btn {
     display: block;
     margin: 0 auto 20px auto;
@@ -54,6 +56,9 @@
     border-radius: var(--border-radius);
     color: var(--text-color);
     cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    position: relative; /* Ensure z-index works */
+    z-index: 1001; /* Higher than menu */
 }
 
 .reset-btn:hover {
@@ -67,31 +72,4 @@
     color: #ffff !important;
 }
 
-/* Responsive Styles */
-@media (max-width: 768px) {
-    .grid {
-        grid-template-columns: repeat(15, 24px);
-        grid-template-rows: repeat(15, 24px);
-        gap: 1px;
-        padding: 8px;
-    }
-    .cell {
-        width: 24px;
-        height: 24px;
-        font-size: 0.8em;
-    }
-}
-
-@media (max-width: 480px) {
-    .grid {
-        grid-template-columns: repeat(15, 20px);
-        grid-template-rows: repeat(15, 20px);
-        gap: 1px;
-        padding: 5px;
-    }
-    .cell {
-        width: 20px;
-        height: 20px;
-        font-size: 0.7em;
-    }
-}
+/* Responsive Styles Handled in stylesheet.css */

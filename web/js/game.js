@@ -169,6 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function resetGame() {
+        console.log('Reset button clicked'); // Debug statement
         currentPlayer = 'X';
         gameActive = true;
         statusDiv.textContent = `Na řadě je hráč: ${currentPlayer}`;

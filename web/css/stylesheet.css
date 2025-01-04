@@ -22,8 +22,8 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  /* Other Variables */
-  --cell-size: 40px;
+  /* Game Board Variables */
+  --cell-size: 30px;
   --grid-gap: 1px;
   --btn-padding: 12px 20px;
   --border-radius: 8px;
@@ -45,6 +45,7 @@
   outline-offset: 4px;
 }
 
+/* Body Styles */
 body {
   font-family: 'Dosis', sans-serif;
   color: var(--text-color);
@@ -58,13 +59,14 @@ body {
   overflow: hidden;
 }
 
-.center-logo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 200px;
-  height: auto;
+/* Container Layout */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 /* Menu */
@@ -79,9 +81,10 @@ body {
   bottom: 0%;
   left: 50%;
   transform: translateX(-50%);
+  z-index: 1000; /* Ensure menu is above other elements */
 }
 
-/* Button styles */
+/* Button Styles */
 .btn {
   display: inline-block;
   cursor: pointer;
@@ -104,12 +107,12 @@ body {
   color: var(--button-hover-text);
 }
 
-/* Main text */
+/* Main Text */
 .main-text { 
   color: var(--primary-color);
   margin: 0;
   font-weight: var(--font-weight-bold);
-  font-size: 3em; /* Consider using a variable like var(--font-size-large) */
+  font-size: var(--font-size-xlarge);
   text-align: center;
   pointer-events: none;
 }
@@ -127,14 +130,14 @@ body {
   pointer-events: none;
 }
 
-
+/* Font Face */
 @font-face {
   font-family: 'Dosis';
   src: url('font/Dosis-Regular.ttf') format('truetype');
   font-style: normal;
 }
 
-/* ABOUT US */
+/* About Us Section */
 .about-us {
   display: flex;
   justify-content: center;
@@ -211,7 +214,7 @@ body {
   margin-left: 10px;
 }
 
-/* Game */
+/* Level Card */
 .level-card {
   display: flex;
   flex-direction: column;
@@ -255,6 +258,7 @@ body {
   -webkit-box-orient: vertical;
 }
 
+/* Moving Text */
 #movingText {
   position: absolute;
   font-size: var(--font-size-base);
@@ -264,6 +268,7 @@ body {
   text-decoration: none;
 }
 
+/* Level List */
 #level-list {
   display: flex;
   flex-wrap: wrap;
@@ -276,6 +281,7 @@ body {
   overflow-y: auto;
 }
 
+/* Scrollbar Styles */
 *::-webkit-scrollbar {
   width: 5px;
 }
@@ -288,17 +294,20 @@ body {
 }
 
 /* Responsive Styles */
-/* Existing styles... */
-
-/* Responsive Styles */
 @media (max-width: 768px) {
+
+  :root {
+    --cell-size: 24px;
+    --grid-gap: 1px;
+  }
+
   body {
     background-size: 1.2rem;
     background-position: 10px 20px;
   }
 
   .main-text {
-    font-size: 1.9em;
+    font-size: var(--font-size-large);
   }  
   .watermark {
     font-size: var(--font-size-small);
@@ -354,33 +363,9 @@ body {
   #level-list .card-text {
       font-size: 0.9rem;
   }
-  #movingText {
-    font-size: var(--font-size-small);
-  }
-
-  .center-logo {
-    position: fixed !important;
-    bottom: 10px !important;
-    right: 10px !important;
-    width: 50px !important;
-    z-index: 1000 !important;
-  }
 
   .menu {
     bottom: 10px;
-  }
-}
-
-@media (max-width: 768px) {
-  /* Container for horizontal scrolling */
-  .about-us {
-      display: flex;
-      flex-direction: row;
-      overflow-x: scroll;
-      scroll-snap-type: x mandatory;
-      -webkit-overflow-scrolling: touch;
-      width: 100%;
-      padding: 20px 0;
   }
 
   /* Hide vertical overflow */
@@ -388,21 +373,59 @@ body {
       overflow-y: hidden;
   }
 
-  /* Individual Card Styling */
-  .card {
-      flex: 0 0 100%;
-      max-width: 100%;
-      height: 600px;
-      margin-right: 20px; /* Space between cards */
-      scroll-snap-align: start;
-      box-sizing: border-box;
-  }
-
   /* Optional: Remove last card's right margin */
   .about-us .card:last-child {
       margin-right: 0;
   }
-  .menu {
-    z-index: 1000;
+
+  .winning-cell {
+    background-color: #27ae60 !important;
+    color: #ffff !important;
+  }
+
+  /* Ensure Reset Button is Positioned Correctly */
+  .reset-btn {
+    position: relative;
+    z-index: 1001; /* Higher than menu */
+    margin-top: 10px;
+  }
+
+  .grid {
+    padding: 8px;
+    width: 90vw;
+  }
+
+  .cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    font-size: 0.8em;
+  }
+
+  .reset-btn {
+    padding: 10px 20px;
+    font-size: var(--font-size-base);
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --cell-size: 20px;
+    --grid-gap: 1px;
+  }
+
+  .grid {
+    padding: 5px;
+    width: 90vw;
+  }
+
+  .cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    font-size: 0.7em;
+  }
+
+  .reset-btn {
+    padding: 8px 16px;
+    font-size: 0.9em;
   }
 }

@@ -11,27 +11,27 @@
 </head>
 <body>
     <div class="container">
-        <div class="main-text" onmousedown="return false;" onselectstart="return false;">
-            Level - {{ game.name }}
-        </div>
-        <div class="watermark" onmousedown="return false;" onselectstart="return false;">
-            Created by ITBlázni
-        </div>
-        <div class="menu">
+        <header class="header">
+            <div class="main-text" onmousedown="return false;" onselectstart="return false;">
+                Level - {{ game.name }}
+            </div>
+            <div class="watermark" onmousedown="return false;" onselectstart="return false;">
+                Created by ITBlázni
+            </div>
+        </header>
+
+        <nav class="menu">
             <a href="{% url 'home' %}" class="btn">Domů</a>
             <a href="{% url 'game_list' %}" class="btn">Seznam Levelů</a>
-            <!-- <a href="{% url 'aboutus' %}" class="btn">O Nás</a> -->
-            <!-- <a href="https://tourde.app/" class="btn">TdA</a> -->
             <a id="toggleTheme" class="btn">Změnit Motiv</a>
-        </div>
-        <h1>Obtížnost: {{ game.difficulty }}</h1>
-        <h1>Status: {{ game.gameState }}</h1>
-        <div class="status" id="status">Na řadě je hráč: X</div>
-        <div class="grid" id="grid">
-        </div>
-        <button class="reset-btn" id="resetBtn">Restartovat hru</button>
+        </nav>
+
+        <main class="game-section">
+            <div id="status" class="status">Na řadě je hráč: X</div>
+            <div id="grid" class="grid"></div>
+            <button id="resetBtn" class="reset-btn">Resetovat Hru</button>
+        </main>
     </div>
-    <script src="{% static 'js/script.js' %}"></script>
     <script src="{% static 'js/game.js' %}"></script>
 </body>
 </html>

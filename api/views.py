@@ -15,6 +15,32 @@ def game_list(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
+        print(f"Received POST data: {request.data}")  # Debug
+        serializer = GameSerializer(data=request.data)
+
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                print(f"Saved game data: {serializer.data}")  # Debug
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                print(f"Error during save: {e}")  # Debug
+                return Response(
+                    {"code": 500, "message": "Internal server error."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+        else:
+            print(f"Serializer errors: {serializer.errors}")  # Debug
+            return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        
+@api_view(['GET', 'POST'])
+def game_list(request):
+    if request.method == 'GET':
+        games = Game.objects.all()
+        serializer = GameSerializer(games, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
         serializer = GameSerializer(data=request.data)
         
         if serializer.is_valid():
@@ -26,10 +52,7 @@ def game_list(request):
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
             except Exception as e:
-                return Response(
-                    {"code": 500, "message": "Internal server error."},
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                )
+                return Response({"code": 500, "message": "Internal server error."},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         else:
             return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
