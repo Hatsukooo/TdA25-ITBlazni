@@ -11,3 +11,4 @@ project/__pycache__/
 /api/migrations
 *.pyc
 /logs
+logs/db.log
