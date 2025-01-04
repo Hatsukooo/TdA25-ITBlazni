@@ -39,14 +39,6 @@
   --moving-text-color: #000000;
   --background-image: url('Loga/Think-different-Academy_LOGO_cerny.png');
 }
-.center-logo {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 200px;
-  height: auto;
-}
 
 .theme-toggle:focus {
   outline: 2px solid var(--primary-color);

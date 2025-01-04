@@ -15,7 +15,36 @@ def game_list(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
+<<<<<<< HEAD
         print("POST request received for game detail")
+=======
+        print(f"Received POST data: {request.data}")  # Debug
+        serializer = GameSerializer(data=request.data)
+
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                print(f"Saved game data: {serializer.data}")  # Debug
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                print(f"Error during save: {e}")  # Debug
+                return Response(
+                    {"code": 500, "message": "Internal server error."},
+                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
+                )
+        else:
+            print(f"Serializer errors: {serializer.errors}")  # Debug
+            return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+        
+@api_view(['GET', 'POST'])
+def game_list(request):
+    if request.method == 'GET':
+        games = Game.objects.all()
+        serializer = GameSerializer(games, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+>>>>>>> parent of 56f72bf (hotfix)
         serializer = GameSerializer(data=request.data)
         print("SERIALIZER LOAD")
         
@@ -23,6 +52,7 @@ def game_list(request):
             print("SERIALIZER VALID CHECK")
             try:
                 board = serializer.validated_data.get('board')
+<<<<<<< HEAD
 
                 if len(board) != 15:
                     print("Board must have exactly 15 rows.")
@@ -54,6 +84,17 @@ def game_list(request):
                 return Response({"code": 422, "message": f"Semantic error: {str(e)}"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
         return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+=======
+                game_state = serializer.validated_data.get('gameState', 'opening')
+
+                serializer.save(gameState=game_state)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+            except Exception as e:
+                return Response({"code": 500, "message": "Internal server error."},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+>>>>>>> parent of 56f72bf (hotfix)
 
 
 @api_view(['GET', 'PUT', 'DELETE'])
