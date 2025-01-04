@@ -185,4 +185,46 @@ document.addEventListener('DOMContentLoaded', () => {
     resetBtn.addEventListener('click', resetGame);
 
     initializeGrid();
+
+    // Theme Toggle Functionality
+    const toggleThemeBtn = document.getElementById('toggleTheme');
+    const logoImg = document.querySelector('.center-logo');
+
+    // Function to update the logo based on theme
+    function updateLogo(theme) {
+        if (logoImg) {
+            if (theme === 'light') {
+                logoImg.src = logoImg.dataset.lightSrc;
+            } else {
+                logoImg.src = logoImg.dataset.darkSrc;
+            }
+        }
+    }
+
+    // Load theme from localStorage if available
+    if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.classList.add('light-theme');
+        toggleThemeBtn.classList.add('active');
+        updateLogo('light');
+    } else {
+        updateLogo('dark');
+    }
+
+    if (toggleThemeBtn) {
+        toggleThemeBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('light-theme');
+            toggleThemeBtn.classList.toggle('active');
+
+            // Determine current theme
+            const isLight = document.documentElement.classList.contains('light-theme');
+            updateLogo(isLight ? 'light' : 'dark');
+
+            // Save theme preference
+            if (isLight) {
+                localStorage.setItem('theme', 'light');
+            } else {
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    }
 });
