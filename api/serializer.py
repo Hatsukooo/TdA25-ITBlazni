@@ -1,11 +1,15 @@
+<<<<<<< HEAD
 # api/serializer.py
+=======
+>>>>>>> parent of 29936e3 (chore(api): peparation for phase 3)
 from rest_framework import serializers
 from .models import Game
-from .constants import GAME_STATES, VALID_CHARACTERS, BOARD_SIZE
+import uuid
 
 class GameSerializer(serializers.ModelSerializer):
     class Meta:
         model = Game
+<<<<<<< HEAD
         fields = ['uuid', 'createdAt', 'updatedAt', 'name', 'difficulty', 'gameState', 'board']
         read_only_fields = ['uuid', 'createdAt', 'updatedAt']
 
@@ -31,3 +35,6 @@ class GameSerializer(serializers.ModelSerializer):
         # Example: Additional validations can be placed here
         print(f"Validating entire game data: {data}")  # Debug
         return data
+=======
+        fields = ['uuid','createdAt', 'updatedAt', 'name', 'difficulty', 'gameState', 'board' ]
+>>>>>>> parent of 29936e3 (chore(api): peparation for phase 3)
