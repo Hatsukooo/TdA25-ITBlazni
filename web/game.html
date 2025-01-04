@@ -12,7 +12,7 @@
 <body>
     <div class="container">
         <div class="main-text" onmousedown="return false;" onselectstart="return false;">
-            Level #{{ game.index }} - {{ game.name }}
+            Level - {{ game.name }}
         </div>
         <div class="watermark" onmousedown="return false;" onselectstart="return false;">
             Created by ITBlázni
@@ -20,9 +20,9 @@
         <div class="menu">
             <a href="{% url 'home' %}" class="btn">Domů</a>
             <a href="{% url 'game_list' %}" class="btn">Seznam Levelů</a>
-            <a href="{% url 'aboutus' %}" class="btn">O Nás</a>
-            <a href="https://tourde.app/" class="btn">TdA</a>
-            <button id="toggleTheme" class="btn">Změnit téma</button>
+            <!-- <a href="{% url 'aboutus' %}" class="btn">O Nás</a> -->
+            <!-- <a href="https://tourde.app/" class="btn">TdA</a> -->
+            <a id="toggleTheme" class="btn">Změnit téma</a>
         </div>
         <h1>Obtížnost: {{ game.difficulty }}</h1>
         <h1>Status: {{ game.gameState }}</h1>

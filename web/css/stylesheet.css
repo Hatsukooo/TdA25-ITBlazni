@@ -288,6 +288,9 @@ body {
 }
 
 /* Responsive Styles */
+/* Existing styles... */
+
+/* Responsive Styles */
 @media (max-width: 768px) {
   body {
     background-size: 1.2rem;
@@ -306,7 +309,9 @@ body {
   }
   .card {
     width: 300px;
-    height: 400px;
+    height: auto; /* Changed to auto to accommodate content */
+    max-height: 80vh; /* Prevent cards from exceeding viewport height */
+    overflow: hidden;
   }
   .card-image img {
     width: 128px;
@@ -320,6 +325,7 @@ body {
   }
   .card-text {
     font-size: 0.9rem;
+    overflow-y: auto; /* Allow internal scrolling if text overflows */
   }
   .card-socials-label {
     font-size: 1rem;
@@ -358,5 +364,42 @@ body {
     right: 10px !important;
     width: 50px !important;
     z-index: 1000 !important;
+  }
+
+  .menu {
+    bottom: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Container for horizontal scrolling */
+  .about-us {
+      display: flex;
+      flex-direction: row;
+      overflow-x: scroll;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      width: 100%;
+      padding: 20px 0;
+  }
+
+  /* Hide vertical overflow */
+  .about-us {
+      overflow-y: hidden;
+  }
+
+  /* Individual Card Styling */
+  .card {
+      flex: 0 0 100%;
+      max-width: 100%;
+      height: 600px;
+      margin-right: 20px; /* Space between cards */
+      scroll-snap-align: start;
+      box-sizing: border-box;
+  }
+
+  /* Optional: Remove last card's right margin */
+  .about-us .card:last-child {
+      margin-right: 0;
   }
 }
