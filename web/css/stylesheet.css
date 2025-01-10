@@ -176,7 +176,7 @@ body {
 .card-image img {
   width: 150px;
   height: 150px;
-  border-radius: 50%;
+  border-radius: 5%
   object-fit: cover;
   margin: 0 auto 20px auto;
 }
