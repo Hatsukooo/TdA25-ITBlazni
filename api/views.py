@@ -4,7 +4,7 @@ from rest_framework import status, viewsets
 from rest_framework.views import exception_handler
 from rest_framework.exceptions import ValidationError
 from .models import Game
-from .serializer import GameSerializer
+from .serializers import GameSerializer
 from django.http import JsonResponse
 
 @api_view(['GET', 'POST'])
