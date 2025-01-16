@@ -147,12 +147,12 @@ LOGGING = {
             'propagate': True,
         },
         'django.db.backends': {
-            'handlers': ['file_db'],
+            'handlers': ['file_db', 'console'],
             'level': 'DEBUG',
             'propagate': False,
         },
         'django.security': {
-            'handlers': ['file_security'],
+            'handlers': ['file_security', 'console'],
             'level': 'INFO',
             'propagate': False,
         },
