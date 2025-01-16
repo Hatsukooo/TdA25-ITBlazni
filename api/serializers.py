@@ -1,7 +1,5 @@
-# api/serializer.py
 from rest_framework import serializers
 from .models import Game
-import uuid
 
 class GameSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,27 +7,18 @@ class GameSerializer(serializers.ModelSerializer):
         fields = ['uuid', 'createdAt', 'updatedAt', 'name', 'difficulty', 'gameState', 'board']
         read_only_fields = ['uuid', 'createdAt', 'updatedAt']
 
-    # def validate_gameState(self, value):
-    #     print(f"Validating gameState: {value}")  # Debug
-    #     if value not in GAME_STATES.values():
-    #         raise serializers.ValidationError("Invalid game state.")
-    #     return value
-
-    # def validate_board(self, value):
-    #     print(f"Validating board with {len(value)} rows.")  # Debug
-    #     if len(value) != BOARD_SIZE:
-    #         raise serializers.ValidationError(f"Board must have exactly {BOARD_SIZE} rows.")
-    #     for row_index, row in enumerate(value):
-    #         if len(row) != BOARD_SIZE:
-    #             raise serializers.ValidationError(f"Row {row_index + 1} must have exactly {BOARD_SIZE} cells.")
-    #         for col_index, cell in enumerate(row):
-    #             if cell not in VALID_CHARACTERS:
-    #                 raise serializers.ValidationError(f"Invalid cell value: '{cell}' at Row {row_index + 1}, Column {col_index + 1}. Allowed: {VALID_CHARACTERS}.")
-    #     return value
-
-    # def validate(self, data):
-    #     # Example: Additional validations can be placed here
-    #     print(f"Validating entire game data: {data}")  # Debug
-    #     return data
-    #     fields = ['uuid','createdAt', 'updatedAt', 'name', 'difficulty', 'gameState', 'board' ]
-    #     fields = ['uuid','createdAt', 'updatedAt', 'name', 'difficulty', 'gameState', 'board' ]
+    def validate_board(self, board):
+        if len(board) != 15 or any(len(row) != 15 for row in board):
+            raise serializers.ValidationError("Board must be a 15x15 grid.")
+        
+        valid_symbols = {'', 'X', 'O'}
+        for row in board:
+            if not all(cell in valid_symbols for cell in row):
+                raise serializers.ValidationError("Board contains invalid symbols.")
+        
+        x_count = sum(row.count('X') for row in board)
+        o_count = sum(row.count('O') for row in board)
+        if x_count < o_count or x_count > o_count + 1:
+            raise serializers.ValidationError("Invalid starting player or symbol count.")
+        
+        return board
