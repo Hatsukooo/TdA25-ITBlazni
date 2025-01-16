@@ -15,72 +15,76 @@ def game_list(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
+        # Debug prints (optional):
         print("POST request received for game detail")
-        print(f"Received POST data: {request.data}")  # Debug
-        serializer = GameSerializer(data=request.data)
+        print(f"Received POST data: {request.data}")  
 
+        serializer = GameSerializer(data=request.data)
         if serializer.is_valid():
             try:
-                serializer.save()
-                print(f"Saved game data: {serializer.data}")  # Debug
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            except Exception as e:
-                print(f"Error during save: {e}")  # Debug
-                return Response(
-                    {"code": 500, "message": "Internal server error."},
-                    status=status.HTTP_500_INTERNAL_SERVER_ERROR
-                )
-        else:
-            print(f"Serializer errors: {serializer.errors}")  # Debug
-            return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-        
-@api_view(['GET', 'POST'])
-def game_list(request):
-    if request.method == 'GET':
-        games = Game.objects.all()
-        serializer = GameSerializer(games, many=True)
-        return Response(serializer.data)
-
-    elif request.method == 'POST':
-        print("POST request received for game detail")
-        serializer = GameSerializer(data=request.data)
-        print("SERIALIZER LOAD")
-        
-        if serializer.is_valid():
-            print("SERIALIZER VALID CHECK")
-            try:
+                # Validate board layout
                 board = serializer.validated_data.get('board')
-
                 if len(board) != 15:
-                    print("Board must have exactly 15 rows.")
-                    return Response({"code": 422, "message": "Semantic error: Board must have exactly 15 rows."}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-
+                    return Response(
+                        {"code": 422, "message": "Semantic error: Board must have exactly 15 rows."},
+                        status=status.HTTP_422_UNPROCESSABLE_ENTITY
+                    )
                 for row_index, row in enumerate(board):
                     if len(row) != 15:
-                        print(f"Row {row_index + 1} does not have exactly 15 cells.")
-                        return Response({"code": 422, "message": f"Semantic error: Row {row_index + 1} must have exactly 15 cells."}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+                        return Response(
+                            {"code": 422, "message": f"Semantic error: Row {row_index + 1} must have exactly 15 cells."},
+                            status=status.HTTP_422_UNPROCESSABLE_ENTITY
+                        )
 
+                # Validate symbols
                 valid_characters = ['', 'X', 'O']
                 invalid_cells = []
                 for row_index, row in enumerate(board):
                     for col_index, cell in enumerate(row):
                         if cell not in valid_characters:
                             invalid_cells.append(f"Row {row_index + 1}, Col {col_index + 1} has invalid value '{cell}'")
-
                 if invalid_cells:
-                    print(f"Invalid characters found: {invalid_cells}")
-                    return Response({"code": 422, "message": f"Semantic error: Invalid characters found: {', '.join(invalid_cells)}. Only allowed characters: {', '.join(valid_characters)}."}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+                    return Response(
+                        {"code": 422, "message": f"Semantic error: Invalid characters found: {', '.join(invalid_cells)}. "
+                                                 f"Only allowed characters: {', '.join(valid_characters)}."},
+                        status=status.HTTP_422_UNPROCESSABLE_ENTITY
+                    )
 
-                game_state = serializer.validated_data.get('gameState', 'opening')
-                serializer.save(gameState=game_state)
+                # Validate X/O counts (starting player check)
+                xCount = sum(row.count('X') for row in board)
+                oCount = sum(row.count('O') for row in board)
+                if xCount < oCount or xCount > oCount + 1:
+                    return Response(
+                        {"code": 422, "message": "Invalid starting player or symbol count."},
+                        status=status.HTTP_422_UNPROCESSABLE_ENTITY
+                    )
+
+                # Validate user-supplied gameState if present
+                allowed_states = ['opening', 'midgame', 'endgame', 'finished']
+                posted_state = serializer.validated_data.get('gameState', 'opening')
+                if posted_state not in allowed_states:
+                    return Response(
+                        {"code": 422, "message": f"Invalid gameState: {posted_state}"},
+                        status=status.HTTP_422_UNPROCESSABLE_ENTITY
+                    )
+
+                # Save the game with the user-supplied or default gameState
+                serializer.save(gameState=posted_state)
+
+                # Debug print
+                print(f"Saved game data: {serializer.data}")  
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
             except Exception as e:
                 print(f"Semantic error: {str(e)}")
-                return Response({"code": 422, "message": f"Semantic error: {str(e)}"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-        
-        return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+                return Response(
+                    {"code": 422, "message": f"Semantic error: {str(e)}"},
+                    status=status.HTTP_422_UNPROCESSABLE_ENTITY
+                )
 
+        # If serializer is not valid
+        print(f"Serializer errors: {serializer.errors}")
+        return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 @api_view(['GET', 'PUT', 'DELETE'])
 def game_detail(request, pk):
