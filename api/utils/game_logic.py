@@ -15,43 +15,42 @@ def check_winning_condition(board, symbol):
 
 def check_row(board, x, y, symbol):
     """Check if there is a row of five symbols starting at (x, y)."""
-    if y > 10:  # Prevent overflow
+    if y > 10:
         return False
     return all(board[x][y + k] == symbol for k in range(5))
 
 def check_column(board, x, y, symbol):
     """Check if there is a column of five symbols starting at (x, y)."""
-    if x > 10:  # Prevent overflow
+    if x > 10:
         return False
     return all(board[x + k][y] == symbol for k in range(5))
 
 def check_diagonal(board, x, y, symbol):
-    """Check if there is a diagonal of five symbols starting at (x, y)."""
-    # Top-left to bottom-right
-    if x <= 10 and y <= 10 and all(board[x + k][y + k] == symbol for k in range(5)):
-        return True
-    # Bottom-left to top-right
-    if x >= 4 and y <= 10 and all(board[x - k][y + k] == symbol for k in range(5)):
-        return True
+    """Check all diagonals starting at (x, y)."""
+    if x <= 10 and y <= 10:
+        if all(board[x + k][y + k] == symbol for k in range(5)):
+            return True
+
+    if x >= 4 and y <= 10:
+        if all(board[x - k][y + k] == symbol for k in range(5)):
+            return True
     return False
+
 
 def check_blocked_four(board, x, y, symbol):
     """Check if there is a row of four symbols that is blocked."""
-    # Add logic for blocked rows, columns, and diagonals
-    # For simplicity, assume blocked means any obstruction at both ends
-    if y >= 1 and y <= 10:  # Ensure room for a block
+    if y >= 1 and y <= 10:
         if (
             all(board[x][y + k] == symbol for k in range(4)) and
             board[x][y - 1] != "" and board[x][y + 4] != ""
         ):
             return True
-    if x >= 1 and x <= 10:  # Vertical block
+    if x >= 1 and x <= 10:
         if (
             all(board[x + k][y] == symbol for k in range(4)) and
             board[x - 1][y] != "" and board[x + 4][y] != ""
         ):
             return True
-    # Check diagonal blocks (both directions)...
     return False
 
 def classify_game_state(board):
