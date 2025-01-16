@@ -3,7 +3,6 @@ import logging
 logger = logging.getLogger(__name__)
 
 def check_winning_condition(board, symbol):
-    """Check if the given symbol has five in a row."""
     for i in range(15):
         for j in range(15):
             if (
@@ -11,8 +10,10 @@ def check_winning_condition(board, symbol):
                 check_column(board, i, j, symbol) or
                 check_diagonal(board, i, j, symbol)
             ):
+                logger.debug(f"Winning condition found at ({i}, {j}) for {symbol}")
                 return True
     return False
+
 
 def check_row(board, x, y, symbol):
     """Check if there is a row of five symbols starting at (x, y)."""
@@ -84,19 +85,28 @@ def classify_game_state(board):
     x_count = sum(row.count('X') for row in board)
     o_count = sum(row.count('O') for row in board)
 
+    # If there are very few pieces, it's the opening phase
     if x_count + o_count <= 5:
         logger.info("Game state classified as 'opening'")
         return 'opening'
 
-    if check_winning_condition(board, 'X') or check_winning_condition(board, 'O'):
-        logger.info("Game state classified as 'endgame'")
+    # Check for a win first
+    if check_winning_condition(board, 'X'):
+        logger.info("Game state classified as 'endgame' for X")
         return 'endgame'
 
+    if check_winning_condition(board, 'O'):
+        logger.info("Game state classified as 'endgame' for O")
+        return 'endgame'
+
+    # Check for blocked four
     for i in range(15):
         for j in range(15):
             if check_blocked_four(board, i, j, 'X') or check_blocked_four(board, i, j, 'O'):
                 logger.info(f"Game state classified as 'midgame' due to blocked four at ({i}, {j})")
                 return 'midgame'
 
+    # Default to midgame if no other condition applies
     logger.info("Game state classified as 'midgame'")
     return 'midgame'
+
