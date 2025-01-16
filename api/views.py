@@ -6,6 +6,7 @@ from rest_framework.exceptions import ValidationError
 from .models import Game
 from .serializers import GameSerializer
 from django.http import JsonResponse
+from .utils.game_logic import classify_game_state
 
 @api_view(['GET', 'POST'])
 def game_list(request):
@@ -15,74 +16,12 @@ def game_list(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        print("POST request received for game detail")
-        print(f"Received POST data: {request.data}")
-
         serializer = GameSerializer(data=request.data)
         if serializer.is_valid():
-            try:
-                # Validate board layout
-                board = serializer.validated_data.get('board')
-                if len(board) != 15:
-                    return Response(
-                        {"code": 422, "message": "Semantic error: Board must have exactly 15 rows."},
-                        status=status.HTTP_422_UNPROCESSABLE_ENTITY
-                    )
-                for row_index, row in enumerate(board):
-                    if len(row) != 15:
-                        return Response(
-                            {"code": 422, "message": f"Semantic error: Row {row_index + 1} must have exactly 15 cells."},
-                            status=status.HTTP_422_UNPROCESSABLE_ENTITY
-                        )
-
-                # Validate symbols
-                valid_characters = ['', 'X', 'O']
-                invalid_cells = []
-                for row_index, row in enumerate(board):
-                    for col_index, cell in enumerate(row):
-                        if cell not in valid_characters:
-                            invalid_cells.append(f"Row {row_index + 1}, Col {col_index + 1} has invalid value '{cell}'")
-                if invalid_cells:
-                    return Response(
-                        {"code": 422, "message": f"Semantic error: Invalid characters found: {', '.join(invalid_cells)}. "
-                                                 f"Only allowed characters: {', '.join(valid_characters)}."},
-                        status=status.HTTP_422_UNPROCESSABLE_ENTITY
-                    )
-
-                # Validate X/O counts (starting player check)
-                x_count = sum(row.count('X') for row in board)
-                o_count = sum(row.count('O') for row in board)
-                if x_count < o_count or x_count > o_count + 1:
-                    return Response(
-                        {"code": 422, "message": "Invalid starting player or symbol count."},
-                        status=status.HTTP_422_UNPROCESSABLE_ENTITY
-                    )
-
-                move_count = x_count + o_count
-                if move_count <= 5:
-                    game_state = 'opening'
-                elif any(row.count('X') >= 3 or row.count('O') >= 3 for row in board):
-                    game_state = 'midgame'
-                else:
-                    game_state = 'endgame'
-                    
-                allowed_states = ['opening', 'midgame', 'endgame', 'finished']
-                posted_state = serializer.validated_data.get('gameState')
-                if posted_state is not None and posted_state in allowed_states:
-                    game_state = posted_state
-
-                serializer.save(gameState=game_state)
-                print(f"Saved game data: {serializer.data}")
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-            except Exception as e:
-                print(f"Semantic error: {str(e)}")
-                return Response(
-                    {"code": 422, "message": f"Semantic error: {str(e)}"},
-                    status=status.HTTP_422_UNPROCESSABLE_ENTITY
-                )
-
-        print(f"Serializer errors: {serializer.errors}")
+            board = serializer.validated_data['board']
+            game_state = classify_game_state(board)
+            serializer.save(gameState=game_state)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 @api_view(['GET', 'PUT', 'DELETE'])
@@ -90,60 +29,23 @@ def game_detail(request, pk):
     try:
         game = Game.objects.get(uuid=pk)
     except Game.DoesNotExist:
-        return Response({"code": 404, "message": "Resource not found"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Game not found"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = GameSerializer(game)
         return Response(serializer.data)
 
-
     elif request.method == 'PUT':
-        print("PUT request received for game detail")
         serializer = GameSerializer(game, data=request.data)
-        print("SERIALIZER LOAD")
-        
         if serializer.is_valid():
-            print("SERIALIZER VALID CHECK")
-            try:
-                board = serializer.validated_data.get('board')
+            board = serializer.validated_data['board']
+            game_state = classify_game_state(board)
+            serializer.save(gameState=game_state)
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
-                if len(board) != 15:
-                    print("Board must have exactly 15 rows.")
-                    return Response({"code": 422, "message": "Semantic error: Board must have exactly 15 rows."}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-                
-
-                for row_index, row in enumerate(board):
-                    if len(row) != 15:
-                        print(f"Row {row_index + 1} does not have exactly 15 cells.")
-                        return Response({"code": 422, "message": f"Semantic error: Row {row_index + 1} must have exactly 15 cells."}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-
-                valid_characters = ['', 'X', 'O']
-                invalid_cells = []
-                for row_index, row in enumerate(board):
-                    for col_index, cell in enumerate(row):
-                        if cell not in valid_characters:
-                            invalid_cells.append(f"Row {row_index + 1}, Col {col_index + 1} has invalid value '{cell}'")
-
-                if invalid_cells:
-                    print(f"Invalid characters found: {invalid_cells}")
-                    return Response({"code": 422, "message": f"Semantic error: Invalid characters found: {', '.join(invalid_cells)}. Only allowed characters: {', '.join(valid_characters)}."}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-
-                serializer.save()
-                print("Game updated successfully")
-                return Response(serializer.data)
-
-            except Exception as e:
-                print(f"Semantic error: {str(e)}")
-                return Response({"code": 422, "message": f"Semantic error: {str(e)}"}, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
-
-        print(f"Bad request: {serializer.errors}")
-        return Response({"code": 400, "message": f"Bad request: {serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
-
-    
     elif request.method == 'DELETE':
-        print("DELETE request received for game detail")
         game.delete()
-        print("Game deleted successfully")
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 @api_view(['GET'])
