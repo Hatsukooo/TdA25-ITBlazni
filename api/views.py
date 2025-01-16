@@ -15,14 +15,12 @@ def game_list(request):
         return Response(serializer.data)
 
     elif request.method == 'POST':
-        # Debug prints (optional):
         print("POST request received for game detail")
-        print(f"Received POST data: {request.data}")  
+        print(f"Received POST data: {request.data}")
 
         serializer = GameSerializer(data=request.data)
         if serializer.is_valid():
             try:
-                # Validate board layout
                 board = serializer.validated_data.get('board')
                 if len(board) != 15:
                     return Response(
@@ -36,7 +34,6 @@ def game_list(request):
                             status=status.HTTP_422_UNPROCESSABLE_ENTITY
                         )
 
-                # Validate symbols
                 valid_characters = ['', 'X', 'O']
                 invalid_cells = []
                 for row_index, row in enumerate(board):
@@ -50,29 +47,25 @@ def game_list(request):
                         status=status.HTTP_422_UNPROCESSABLE_ENTITY
                     )
 
-                # Validate X/O counts (starting player check)
-                xCount = sum(row.count('X') for row in board)
-                oCount = sum(row.count('O') for row in board)
-                if xCount < oCount or xCount > oCount + 1:
+                x_count = sum(row.count('X') for row in board)
+                o_count = sum(row.count('O') for row in board)
+                if x_count < o_count or x_count > o_count + 1:
                     return Response(
                         {"code": 422, "message": "Invalid starting player or symbol count."},
                         status=status.HTTP_422_UNPROCESSABLE_ENTITY
                     )
-
-                # Validate user-supplied gameState if present
                 allowed_states = ['opening', 'midgame', 'endgame', 'finished']
-                posted_state = serializer.validated_data.get('gameState', 'opening')
+                posted_state = serializer.validated_data.get('gameState')
+                if posted_state is None:
+                    posted_state = 'opening'
                 if posted_state not in allowed_states:
                     return Response(
                         {"code": 422, "message": f"Invalid gameState: {posted_state}"},
                         status=status.HTTP_422_UNPROCESSABLE_ENTITY
                     )
 
-                # Save the game with the user-supplied or default gameState
                 serializer.save(gameState=posted_state)
-
-                # Debug print
-                print(f"Saved game data: {serializer.data}")  
+                print(f"Saved game data: {serializer.data}")
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 
             except Exception as e:
@@ -82,7 +75,6 @@ def game_list(request):
                     status=status.HTTP_422_UNPROCESSABLE_ENTITY
                 )
 
-        # If serializer is not valid
         print(f"Serializer errors: {serializer.errors}")
         return Response(serializer.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
