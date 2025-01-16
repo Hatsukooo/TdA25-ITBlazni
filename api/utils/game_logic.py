@@ -108,5 +108,5 @@ def classify_game_state(board):
 
     # Default to midgame if no other condition applies
     logger.info("Game state classified as 'midgame'")
-    return 'midgame'
+    return 'endgame'
 
