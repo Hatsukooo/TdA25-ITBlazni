@@ -80,33 +80,30 @@ def check_blocked_four(board, x, y, symbol):
     return False
 
 def classify_game_state(board):
-    """Classify the game state based on the board."""
     logger.info(f"Classifying game state for board: {board}")
-    x_count = sum(row.count('X') for row in board)
-    o_count = sum(row.count('O') for row in board)
 
-    # If there are very few pieces, it's the opening phase
-    if x_count + o_count <= 5:
-        logger.info("Game state classified as 'opening'")
+    if sum(row.count('X') + row.count('O') for row in board) <= 5:
         return 'opening'
 
-    # Check for a win first
-    if check_winning_condition(board, 'X'):
-        logger.info("Game state classified as 'endgame' for X")
+    winning_state = False
+    for symbol in ['X', 'O']:
+        if check_winning_condition(board, symbol):
+            winning_state = True
+            break
+
+    if winning_state:
         return 'endgame'
 
-    if check_winning_condition(board, 'O'):
-        logger.info("Game state classified as 'endgame' for O")
-        return 'endgame'
-
-    # Check for blocked four
+    midgame_state = False
     for i in range(15):
         for j in range(15):
             if check_blocked_four(board, i, j, 'X') or check_blocked_four(board, i, j, 'O'):
-                logger.info(f"Game state classified as 'midgame' due to blocked four at ({i}, {j})")
-                return 'endgame'
+                midgame_state = True
+                break
+        if midgame_state:
+            break
 
-    # Default to midgame if no other condition applies
-    logger.info("Game state classified as 'midgame'")
-    return 'midgame'
+    return 'midgame' if midgame_state else 'opening'
+
+
 
