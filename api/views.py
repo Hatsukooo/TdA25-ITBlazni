@@ -58,16 +58,14 @@ def game_list(request):
                         status=status.HTTP_422_UNPROCESSABLE_ENTITY
                     )
 
-                # Classify game state based on the number of moves
                 move_count = x_count + o_count
                 if move_count <= 5:
                     game_state = 'opening'
-                elif move_count <= 10:
+                elif any(row.count('X') >= 3 or row.count('O') >= 3 for row in board):
                     game_state = 'midgame'
                 else:
                     game_state = 'endgame'
-
-                # Validate user-supplied gameState if present
+                    
                 allowed_states = ['opening', 'midgame', 'endgame', 'finished']
                 posted_state = serializer.validated_data.get('gameState')
                 if posted_state is not None and posted_state in allowed_states:
