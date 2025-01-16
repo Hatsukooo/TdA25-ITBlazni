@@ -104,9 +104,9 @@ def classify_game_state(board):
         for j in range(15):
             if check_blocked_four(board, i, j, 'X') or check_blocked_four(board, i, j, 'O'):
                 logger.info(f"Game state classified as 'midgame' due to blocked four at ({i}, {j})")
-                return 'midgame'
+                return 'endgame'
 
     # Default to midgame if no other condition applies
     logger.info("Game state classified as 'midgame'")
-    return 'endgame'
+    return 'midgame'
 
