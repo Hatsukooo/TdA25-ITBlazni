@@ -32,9 +32,9 @@ def detect_win_condition(board):
     A winning condition is when 5 symbols ('X' or 'O') are in a row, column, or diagonal.
     """
     size = len(board)
-    logger.debug("Checking for winning conditions.")
 
     def check_line(line):
+        """Check if a line contains 5 consecutive 'X' or 'O'."""
         count_x = 0
         count_o = 0
         for cell in line:
@@ -48,22 +48,22 @@ def detect_win_condition(board):
                 count_x = count_o = 0
 
             if count_x == 5 or count_o == 5:
-                logger.debug(f"Winning condition detected in line: {line}")
                 return True
         return False
 
     for i in range(size):
         if check_line(board[i]):
             return True
-        if check_line([board[j][i] for j in range(size)]): 
+        if check_line([board[j][i] for j in range(size)]):
             return True
 
-    for i in range(size - 4): 
-        for j in range(size - 4):
-            if check_line([board[i + k][j + k] for k in range(5)]):
-                return True
-            if check_line([board[i + k][j + 4 - k] for k in range(5)]):
-                return True
+    for i in range(size):
+        for j in range(size):
+            if i + 4 < size and j + 4 < size:
+                if check_line([board[i + k][j + k] for k in range(5)]):
+                    return True
+            if i + 4 < size and j - 4 >= 0:
+                if check_line([board[i + k][j - k] for k in range(5)]):
+                    return True
 
-    logger.debug("No winning condition detected.")
     return False
