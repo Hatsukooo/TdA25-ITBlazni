@@ -1,26 +1,64 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import NotFound
 from django.shortcuts import get_object_or_404
+from django.utils import timezone
+from datetime import timedelta
+from rest_framework.exceptions import NotFound
+import logging
+
 from .models import Game
 from .serializers import GameSerializer
 from .utils.game_logic import classify_game_state
-import logging
 
 logger = logging.getLogger(__name__)
+
 
 @api_view(['GET', 'POST'])
 def game_list(request):
     """
-    Retrieve all games or create a new game.
+    Retrieve all games (optionally filtered by query params) or create a new game.
     """
+
     if request.method == 'GET':
         games = Game.objects.all()
+
+        # Grab query params
+        name = request.GET.get('name', '').strip()
+        difficulty = request.GET.get('difficulty', '').strip()
+        updated = request.GET.get('updated', '').strip()
+
+        # Filter by name (partial match, case-insensitive)
+        if name:
+            games = games.filter(name__icontains=name)
+        
+        # Filter by difficulty (exact match, ignoring case)
+        if difficulty:
+            games = games.filter(difficulty__iexact=difficulty)
+        
+        # Filter by last updated: 24h, 7d, 1m, 3m
+        from django.utils import timezone
+        from datetime import timedelta
+
+        now = timezone.now()
+        if updated == '24h':
+            threshold = now - timedelta(hours=24)
+            games = games.filter(updatedAt__gte=threshold)
+        elif updated == '7d':
+            threshold = now - timedelta(days=7)
+            games = games.filter(updatedAt__gte=threshold)
+        elif updated == '1m':
+            threshold = now - timedelta(days=30)
+            games = games.filter(updatedAt__gte=threshold)
+        elif updated == '3m':
+            threshold = now - timedelta(days=90)
+            games = games.filter(updatedAt__gte=threshold)
+
         serializer = GameSerializer(games, many=True)
         return Response(serializer.data)
 
     elif request.method == 'POST':
+        # Existing create logic stays the same
         serializer = GameSerializer(data=request.data)
         if serializer.is_valid():
             board = serializer.validated_data['board']
@@ -38,6 +76,7 @@ def game_detail(request, pk):
     """
     Retrieve, update, or delete a specific game.
     """
+    # Unchanged
     game = get_object_or_404(Game, uuid=pk)
 
     if request.method == 'GET':

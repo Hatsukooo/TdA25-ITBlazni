@@ -1,3 +1,5 @@
+// script.js
+
 // Ahoj Function
 function Ahoj() {
     console.log("Co to tady děláš????");
@@ -10,14 +12,15 @@ document.addEventListener("DOMContentLoaded", function () {
         development: "http://localhost:8000/api/v1/games"
     };
 
-    const environment = "production";
-    const apiUrl = apiUrls[environment];
+    const environment = "production"; 
+    const baseApiUrl = apiUrls[environment];
 
     const levelList = document.getElementById("level-list");
 
-    async function fetchLevels() {
+    // 1) Fetch & Display games without filters initially
+    async function fetchLevels(url) {
         try {
-            const response = await fetch(apiUrl);
+            const response = await fetch(url);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -36,11 +39,12 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Level list container not found in the DOM.");
             return;
         }
-        if (levels.length === 0) {
-            levelList.innerHTML = "<li>No levels available. <strong>DEV_TEST #1</strong></li>";
+
+        if (!levels || levels.length === 0) {
+            levelList.innerHTML = "<li>No levels available.</li>";
             return;
         }
-    
+
         levelList.innerHTML = "";
         levels.forEach((level, index) => {
             const levelItem = document.createElement("li");
@@ -60,16 +64,58 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    if (levelList) {
-        fetchLevels();
+    // 2) Build query string and refetch from server
+    function applyFilters() {
+        const nameInput = document.getElementById("filterName");
+        const difficultySelect = document.getElementById("filterDifficulty");
+        const updatedSelect = document.getElementById("filterUpdated");
+
+        const nameVal = nameInput.value.trim();
+        const diffVal = difficultySelect.value.trim();
+        const updVal = updatedSelect.value.trim();
+
+        // Build query params
+        const params = new URLSearchParams();
+
+        if (nameVal) {
+            params.append("name", nameVal);
+        }
+        if (diffVal) {
+            params.append("difficulty", diffVal);
+        }
+        if (updVal) {
+            params.append("updated", updVal);
+        }
+
+        // Construct the final URL
+        const finalUrl = `${baseApiUrl}?${params.toString()}`; 
+        console.log("Fetching with filters:", finalUrl);
+
+        // Re-fetch the server with these filters
+        fetchLevels(finalUrl);
     }
 
+    // INITIAL LOAD: fetch all games (unfiltered)
+    if (levelList) {
+        fetchLevels(baseApiUrl);
+    }
+
+    // Hook up the "Použít filtry" button
+    const applyFiltersBtn = document.getElementById("applyFilters");
+    if (applyFiltersBtn) {
+        applyFiltersBtn.addEventListener("click", applyFilters);
+    }
+
+    // ---------------------------------------
+    // The rest of your existing code remains
+    // ---------------------------------------
+    
     const textElement = document.getElementById("movingText");
     if (textElement) {
         let xPos = 0;
         let yPos = 0;
-        let xSpeed = 1.0; 
-        let ySpeed = 1.0; 
+        let xSpeed = 1.0;
+        let ySpeed = 1.0;
 
         function moveText() {
             xPos += xSpeed;
@@ -89,17 +135,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
         moveText();
     }
-    
+
     const loader = document.getElementById('loader');
     window.addEventListener('load', () => {
-        loader.classList.add('hidden');
+        if (loader) loader.classList.add('hidden');
     });
 
     // Theme Toggle Functionality
     const toggleThemeBtn = document.getElementById('toggleTheme');
     const logoImg = document.querySelector('.center-logo');
 
-    // Function to update the logo based on theme
     function updateLogo(theme) {
         if (logoImg) {
             if (theme === 'light') {
@@ -110,10 +155,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    // Load theme from localStorage if available
     if (localStorage.getItem('theme') === 'light') {
         document.documentElement.classList.add('light-theme');
-        toggleThemeBtn.classList.add('active');
+        if (toggleThemeBtn) toggleThemeBtn.classList.add('active');
         updateLogo('light');
     } else {
         updateLogo('dark');

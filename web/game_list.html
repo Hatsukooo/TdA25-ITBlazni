@@ -5,24 +5,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {% load static %}
-    <link rel="stylesheet" href="{% static 'css\stylesheet.css' %}" type="text/css">
-    <link rel="shortcut icon" href="{% static 'css\Ikonky\SVG\Idea\zarivka_idea_bile.svg' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/stylesheet.css' %}" type="text/css">
+    <!-- 
+      NOTE: Use forward slashes in your static paths on all OSes for consistency.
+      e.g. 'css/stylesheet.css' instead of 'css\stylesheet.css'
+    -->
+    <link rel="shortcut icon" href="{% static 'css/Ikonky/SVG/Idea/zarivka_idea_bile.svg' %}" type="image/x-icon">
 </head>
 <body>
     <div class="container">
-        <div class="main-text" onmousedown='return false;' onselectstart='return false;'>Piškvorky - Seznam Levelů </div>
-        <div class="watermark" onmousedown='return false;' onselectstart='return false;'>Created by ITBlázni</div>
+        <div class="main-text" onmousedown='return false;' onselectstart='return false;'>
+            Piškvorky - Seznam Levelů
+        </div>
+        <div class="watermark" onmousedown='return false;' onselectstart='return false;'>
+            Created by ITBlázni
+        </div>
         <div class="menu">
             <a href="{% url 'home' %}" class="btn">Domů</a>
             <a href="{% url 'aboutus' %}" class="btn">O Nás</a>
             <a href="https://tourde.app/" class="btn">TdA</a>
             <a id="toggleTheme" class="btn">Změnit Motiv</a>
-          </div>
+        </div>
     </div>
+
+    <!-- NEW: Filters Section -->
+    <div class="filters fancy-filters">
+        <h2 class="filters-header">Filtrovat Levely</h2>
+      
+        <label for="filterName">Název: </label>
+        <input type="text" id="filterName" placeholder="Filtr názvu...">
+      
+        <label for="filterDifficulty">Obtížnost: </label>
+        <select id="filterDifficulty">
+          <option value="">-- Všechny --</option>
+          <option value="začátečník">začátečník</option>
+          <option value="jednoduchá">jednoduchá</option>
+          <option value="pokročilá">pokročilá</option>
+          <option value="těžká">těžká</option>
+          <option value="nejtěžší">nejtěžší</option>
+        </select>
+      
+        <label for="filterUpdated">Poslední úprava: </label>
+        <select id="filterUpdated">
+          <option value="">-- Kdykoliv --</option>
+          <option value="24h">Za posledních 24 hodin</option>
+          <option value="7d">Za posledních 7 dní</option>
+          <option value="1m">Za poslední měsíc</option>
+          <option value="3m">Za poslední 3 měsíce</option>
+        </select>
+      
+        <button id="applyFilters" class="btn">Použít filtry</button>
+      </div>
+
     <div class="levels">
         <ol id="level-list">Načítám...</ol>
     </div>
-    </div>
-    <script src="{% static 'js\script.js' %}"></script>
+
+    <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>
