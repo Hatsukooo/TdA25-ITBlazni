@@ -1,10 +1,10 @@
 from django.utils import timezone
 from rest_framework.exceptions import APIException
 from rest_framework import status
-# -------------------------------------------------------------------
-# 1) Basic Board Helpers
-# -------------------------------------------------------------------
 
+#
+# 1) Board Helpers
+#
 def get_empty_board() -> list[list[str]]:
     """
     Returns a 15x15 board filled with empty strings (or spaces).
@@ -26,22 +26,21 @@ def is_15x15(board: list[list[str]]) -> bool:
             return False
     return True
 
-# -------------------------------------------------------------------
-# 2) Check 5 in a Row
-# -------------------------------------------------------------------
-
+#
+# 2) Check for 5 in a row
+#
 def check_five_in_a_row(board: list[list[str]]) -> bool:
     """
     Returns True if there's already a 5-in-a-row (X or O).
     """
-    directions = [(1, 0), (0, 1), (1, 1), (1, -1)]  # down, right, diag down-right, diag up-right
+    directions = [(1, 0), (0, 1), (1, 1), (1, -1)]
     n = 15
 
     for r in range(n):
         for c in range(n):
             symbol = board[r][c]
             if symbol not in ["X", "O"]:
-                continue  # skip empty or invalid
+                continue
             for dr, dc in directions:
                 count = 1
                 rr, cc = r + dr, c + dc
@@ -53,17 +52,14 @@ def check_five_in_a_row(board: list[list[str]]) -> bool:
                         return True
     return False
 
-# -------------------------------------------------------------------
-# 3) Can Next Move Win? (New Helper)
-# -------------------------------------------------------------------
-
+#
+# 3) Can next move form 5?
+#
 def can_next_move_win(board: list[list[str]], x_count: int, o_count: int) -> bool:
     """
     Returns True if the NEXT player to move can place a single piece
     and immediately form 5 in a row.
     """
-    # Determine which player goes next:
-    # If X == O, X moves next. Otherwise, O moves next.
     if x_count == o_count:
         next_player = "X"
     else:
@@ -72,19 +68,19 @@ def can_next_move_win(board: list[list[str]], x_count: int, o_count: int) -> boo
     n = 15
     for r in range(n):
         for c in range(n):
-            if board[r][c] == "":  # or " " if you use spaces for empty
+            if board[r][c] == "":
                 # Place temporarily
                 board[r][c] = next_player
+                # Check if 5 formed
                 if check_five_in_a_row(board):
                     board[r][c] = ""  # revert
                     return True
                 board[r][c] = ""  # revert
     return False
 
-# -------------------------------------------------------------------
-# 4) Main Classification
-# -------------------------------------------------------------------
-
+#
+# 4) Core classification logic
+#
 def classify_board(board: list[list[str]]) -> str:
     """
     Determines whether the board should be:
@@ -93,11 +89,12 @@ def classify_board(board: list[list[str]]) -> str:
       - "endgame"
     Raises an exception if invalid.
     """
-    # 1) Check size
+
+    # Validate size
     if not is_15x15(board):
         raise APIException("Invalid board size", status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
-    # 2) Count symbols, check validity
+    # Count X and O
     x_count, o_count = 0, 0
     for row in board:
         for cell in row:
@@ -111,57 +108,69 @@ def classify_board(board: list[list[str]]) -> str:
                 # Invalid symbol
                 raise APIException("Invalid symbol on board", status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
-    # X must start: so x_count must be either == o_count OR x_count == o_count + 1
+    # Check X starts (x_count == o_count or x_count = o_count+1)
     if not (x_count == o_count or x_count == o_count + 1):
         raise APIException("Invalid move count", status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
     total_moves = x_count + o_count
 
-    # 3) If there's already 5 in a row => 'endgame'
+    # Already 5 in a row => "endgame"
     if check_five_in_a_row(board):
         return "endgame"
 
-    # 4) If next move can form 5 in a row => 'endgame'
+    # If next move can form 5 => "endgame"
     if can_next_move_win(board, x_count, o_count):
         return "endgame"
 
-    # 5) If total_moves <= 5 => 'opening'
+    # If total_moves <= 5 => "opening"
     if total_moves <= 5:
         return "opening"
 
-    # 6) Otherwise => 'midgame'
+    # Otherwise => "midgame"
     return "midgame"
 
-# -------------------------------------------------------------------
-# 5) High-Level Create / Update (if you do it here)
-# -------------------------------------------------------------------
 
+#
+# 5) WRAPPER: classify_game_state
+#
+def classify_game_state(board: list[list[str]]) -> str:
+    """
+    Some older code might still do:
+      from .utils.game_logic import classify_game_state
+    We wrap our new 'classify_board' for backward compatibility.
+    """
+    return classify_board(board)
+
+
+#
+# 6) Create / Update helpers
+#
 def create_game(payload: dict) -> dict:
     """
-    Create a new game dict from payload, classify it, return the game.
+    Create a new game from payload, classify it, return the game.
     Raises 422 if invalid.
     """
     game_name = payload.get("name", "Untitled")
     difficulty = payload.get("difficulty", "easy")
     board = payload.get("board", get_empty_board())
 
-    # Classify board
-    game_state = classify_board(board)
+    game_state = classify_game_state(board)
+    now = timezone.now()
 
     game = {
         "name": game_name,
         "difficulty": difficulty,
         "board": board,
         "gameState": game_state,
-        "createdAt": timezone.now(),
-        "updatedAt": timezone.now(),
+        "createdAt": now,
+        "updatedAt": now,
     }
     return game
 
 
 def update_game(existing_game: dict, payload: dict) -> dict:
     """
-    Update existing_game in place with payload fields, re-classify, return updated game.
+    Update existing_game with fields from payload, re-classify, return updated game.
     """
     if "name" in payload:
         existing_game["name"] = payload["name"]
@@ -170,9 +179,7 @@ def update_game(existing_game: dict, payload: dict) -> dict:
     if "board" in payload:
         existing_game["board"] = payload["board"]
 
-    # Re-classify
-    game_state = classify_board(existing_game["board"])
-    existing_game["gameState"] = game_state
+    existing_game["gameState"] = classify_game_state(existing_game["board"])
     existing_game["updatedAt"] = timezone.now()
 
     return existing_game
