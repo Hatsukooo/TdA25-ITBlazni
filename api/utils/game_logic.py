@@ -2,108 +2,68 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def check_winning_condition(board, symbol):
-    for i in range(15):
-        for j in range(15):
-            if (
-                check_row(board, i, j, symbol) or
-                check_column(board, i, j, symbol) or
-                check_diagonal(board, i, j, symbol)
-            ):
-                logger.debug(f"Winning condition found at ({i}, {j}) for {symbol}")
-                return True
-    return False
-
-
-def check_row(board, x, y, symbol):
-    """Check if there is a row of five symbols starting at (x, y)."""
-    if y > 10:
-        return False
-    return all(board[x][y + k] == symbol for k in range(5))
-
-def check_column(board, x, y, symbol):
-    """Check if there is a column of five symbols starting at (x, y)."""
-    if x > 10:
-        return False
-    return all(board[x + k][y] == symbol for k in range(5))
-
-def check_diagonal(board, x, y, symbol):
-    """Check all diagonals starting at or overlapping (x, y)."""
-    for offset in range(-4, 1):
-        if 0 <= x + offset <= 10 and 0 <= y + offset <= 10:
-            if all(board[x + offset + k][y + offset + k] == symbol for k in range(5)):
-                return True
-
-    for offset in range(-4, 1):
-        if 4 <= x + offset <= 14 and 0 <= y + offset <= 10:
-            if all(board[x + offset - k][y + offset + k] == symbol for k in range(5)):
-                return True
-
-    return False
-
-def check_blocked_four(board, x, y, symbol):
-    """Check if there is a row of four symbols that is blocked."""
-    if 0 <= y <= 10:
-        if (
-            all(board[x][y + k] == symbol for k in range(4)) and
-            (y == 0 or board[x][y - 1] != "") and
-            (y + 4 >= 15 or board[x][y + 4] != "")
-        ):
-            return True
-
-    if 0 <= x <= 10:
-        if (
-            all(board[x + k][y] == symbol for k in range(4)) and
-            (x == 0 or board[x - 1][y] != "") and
-            (x + 4 >= 15 or board[x + 4][y] != "")
-        ):
-            return True
-
-    for offset in range(-4, 1):
-        if 0 <= x + offset <= 10 and 0 <= y + offset <= 10:
-            if (
-                all(board[x + offset + k][y + offset + k] == symbol for k in range(4)) and
-                (offset == -4 or board[x + offset - 1][y + offset - 1] != "") and
-                (x + offset + 4 >= 15 or y + offset + 4 >= 15 or board[x + offset + 4][y + offset + 4] != "")
-            ):
-                return True
-
-    for offset in range(-4, 1):
-        if 4 <= x + offset <= 14 and 0 <= y + offset <= 10:
-            if (
-                all(board[x + offset - k][y + offset + k] == symbol for k in range(4)) and
-                (offset == -4 or board[x + offset + 1][y + offset - 1] != "") and
-                (x + offset - 4 < 0 or y + offset + 4 >= 15 or board[x + offset - 4][y + offset + 4] != "")
-            ):
-                return True
-
-    return False
-
 def classify_game_state(board):
-    logger.info(f"Classifying game state for board: {board}")
+    """
+    Classifies the state of the game based on the board's current configuration.
+    
+    Game states:
+    - "opening": <= 5 moves
+    - "midgame": > 5 moves without a winning condition
+    - "endgame": A winning condition is met or next move decides the winner
+    """
+    num_moves = sum(1 for row in board for cell in row if cell != "")
+    logger.debug(f"Number of moves: {num_moves}")
 
-    if sum(row.count('X') + row.count('O') for row in board) <= 5:
-        return 'opening'
+    if num_moves <= 5:
+        logger.debug("Game state classified as 'opening'.")
+        return "opening"
 
-    winning_state = False
-    for symbol in ['X', 'O']:
-        if check_winning_condition(board, symbol):
-            winning_state = True
-            break
+    if detect_win_condition(board):
+        logger.debug("Game state classified as 'endgame'.")
+        return "endgame"
 
-    if winning_state:
-        return 'endgame'
-
-    midgame_state = False
-    for i in range(15):
-        for j in range(15):
-            if check_blocked_four(board, i, j, 'X') or check_blocked_four(board, i, j, 'O'):
-                midgame_state = True
-                break
-        if midgame_state:
-            break
-
-    return 'midgame' if midgame_state else 'opening'
+    logger.debug("Game state classified as 'midgame'.")
+    return "midgame"
 
 
+def detect_win_condition(board):
+    """
+    Detects if there is a winning condition on the board.
+    A winning condition is when 5 symbols ('X' or 'O') are in a row, column, or diagonal.
+    """
+    size = len(board)
+    logger.debug("Checking for winning conditions.")
 
+    def check_line(line):
+        count_x = 0
+        count_o = 0
+        for cell in line:
+            if cell == "X":
+                count_x += 1
+                count_o = 0
+            elif cell == "O":
+                count_o += 1
+                count_x = 0
+            else:
+                count_x = count_o = 0
+
+            if count_x == 5 or count_o == 5:
+                logger.debug(f"Winning condition detected in line: {line}")
+                return True
+        return False
+
+    for i in range(size):
+        if check_line(board[i]):
+            return True
+        if check_line([board[j][i] for j in range(size)]): 
+            return True
+
+    for i in range(size - 4): 
+        for j in range(size - 4):
+            if check_line([board[i + k][j + k] for k in range(5)]):
+                return True
+            if check_line([board[i + k][j + 4 - k] for k in range(5)]):
+                return True
+
+    logger.debug("No winning condition detected.")
+    return False
