@@ -1,85 +1,179 @@
-import logging
+from django.utils import timezone
+from rest_framework.exceptions import APIException
+from rest_framework import status
 
-logger = logging.getLogger(__name__)
+# -------------------------------------------------------------------
+# 1) Basic Board Helpers
+# -------------------------------------------------------------------
 
-def classify_game_state(board):
+def get_empty_board() -> list[list[str]]:
     """
-    Classifies the state of the game based on the board's current configuration.
-
-    Game states:
-    - "opening": <= 5 moves
-    - "midgame": > 5 moves without a winning condition
-    - "endgame": A winning condition is met or next move decides the winner
+    Returns a 15x15 board filled with empty strings (or spaces).
+    Adjust if your code uses " " instead of "".
     """
-    num_moves = sum(1 for row in board for cell in row if cell != "")
-    logger.debug(f"Number of moves: {num_moves}")
+    board = []
+    for _ in range(15):
+        row = ["" for _ in range(15)]  # or " "
+        board.append(row)
+    return board
 
-    if num_moves <= 5:
-        logger.debug("Game state classified as 'opening'.")
-        return "opening"
 
-    if detect_win_condition(board, check_potential=True):
-        logger.debug("Game state classified as 'endgame'.")
+def is_15x15(board: list[list[str]]) -> bool:
+    """Checks if board is exactly 15 rows of 15 columns each."""
+    if len(board) != 15:
+        return False
+    for row in board:
+        if len(row) != 15:
+            return False
+    return True
+
+# -------------------------------------------------------------------
+# 2) Check 5 in a Row
+# -------------------------------------------------------------------
+
+def check_five_in_a_row(board: list[list[str]]) -> bool:
+    """
+    Returns True if there's already a 5-in-a-row (X or O).
+    """
+    directions = [(1, 0), (0, 1), (1, 1), (1, -1)]  # down, right, diag down-right, diag up-right
+    n = 15
+
+    for r in range(n):
+        for c in range(n):
+            symbol = board[r][c]
+            if symbol not in ["X", "O"]:
+                continue  # skip empty or invalid
+            for dr, dc in directions:
+                count = 1
+                rr, cc = r + dr, c + dc
+                while 0 <= rr < n and 0 <= cc < n and board[rr][cc] == symbol:
+                    count += 1
+                    rr += dr
+                    cc += dc
+                    if count >= 5:
+                        return True
+    return False
+
+# -------------------------------------------------------------------
+# 3) Can Next Move Win? (New Helper)
+# -------------------------------------------------------------------
+
+def can_next_move_win(board: list[list[str]], x_count: int, o_count: int) -> bool:
+    """
+    Returns True if the NEXT player to move can place a single piece
+    and immediately form 5 in a row.
+    """
+    # Determine which player goes next:
+    # If X == O, X moves next. Otherwise, O moves next.
+    if x_count == o_count:
+        next_player = "X"
+    else:
+        next_player = "O"
+
+    n = 15
+    for r in range(n):
+        for c in range(n):
+            if board[r][c] == "":  # or " " if you use spaces for empty
+                # Place temporarily
+                board[r][c] = next_player
+                if check_five_in_a_row(board):
+                    board[r][c] = ""  # revert
+                    return True
+                board[r][c] = ""  # revert
+    return False
+
+# -------------------------------------------------------------------
+# 4) Main Classification
+# -------------------------------------------------------------------
+
+def classify_board(board: list[list[str]]) -> str:
+    """
+    Determines whether the board should be:
+      - "opening"
+      - "midgame"
+      - "endgame"
+    Raises an exception if invalid.
+    """
+    # 1) Check size
+    if not is_15x15(board):
+        raise APIException("Invalid board size", status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    # 2) Count symbols, check validity
+    x_count, o_count = 0, 0
+    for row in board:
+        for cell in row:
+            if cell == "X":
+                x_count += 1
+            elif cell == "O":
+                o_count += 1
+            elif cell == "":
+                continue
+            else:
+                # Invalid symbol
+                raise APIException("Invalid symbol on board", status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    # X must start: so x_count must be either == o_count OR x_count == o_count + 1
+    if not (x_count == o_count or x_count == o_count + 1):
+        raise APIException("Invalid move count", status_code=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    total_moves = x_count + o_count
+
+    # 3) If there's already 5 in a row => 'endgame'
+    if check_five_in_a_row(board):
         return "endgame"
 
-    logger.debug("Game state classified as 'midgame'.")
+    # 4) If next move can form 5 in a row => 'endgame'
+    if can_next_move_win(board, x_count, o_count):
+        return "endgame"
+
+    # 5) If total_moves <= 5 => 'opening'
+    if total_moves <= 5:
+        return "opening"
+
+    # 6) Otherwise => 'midgame'
     return "midgame"
 
-def detect_win_condition(board, check_potential=False):
+# -------------------------------------------------------------------
+# 5) High-Level Create / Update (if you do it here)
+# -------------------------------------------------------------------
+
+def create_game(payload: dict) -> dict:
     """
-    Detects if there is a winning condition on the board.
-    If `check_potential` is True, also checks for potential winning moves.
-
-    Winning condition: 5 symbols ('X' or 'O') in a row, column, or diagonal.
-    Potential condition: 4 consecutive symbols with at least one open end.
+    Create a new game dict from payload, classify it, return the game.
+    Raises 422 if invalid.
     """
-    size = len(board)
+    game_name = payload.get("name", "Untitled")
+    difficulty = payload.get("difficulty", "easy")
+    board = payload.get("board", get_empty_board())
 
-    def check_line(line):
-        """Check if a line contains 5 consecutive 'X' or 'O' or a potential win."""
-        count_x = 0
-        count_o = 0
-        for i, cell in enumerate(line):
-            if cell == "X":
-                count_x += 1
-                count_o = 0
-            elif cell == "O":
-                count_o += 1
-                count_x = 0
-            else:
-                if check_potential:
-                    if count_x == 4 or count_o == 4:
-                        if i > 0 and i < len(line):
-                            if (line[i - 1] == "" or line[i] == ""):
-                                return "potential"
-                count_x = count_o = 0
+    # Classify board
+    game_state = classify_board(board)
 
-            if count_x == 5 or count_o == 5:
-                return "win"
-        return "none"
+    game = {
+        "name": game_name,
+        "difficulty": difficulty,
+        "board": board,
+        "gameState": game_state,
+        "createdAt": timezone.now(),
+        "updatedAt": timezone.now(),
+    }
+    return game
 
-    for i in range(size):
-        if check_line(board[i]) == "win" or check_line([board[j][i] for j in range(size)]) == "win":
-            return True
 
-        if check_potential:
-            if check_line(board[i]) == "potential" or check_line([board[j][i] for j in range(size)]) == "potential":
-                return True
+def update_game(existing_game: dict, payload: dict) -> dict:
+    """
+    Update existing_game in place with payload fields, re-classify, return updated game.
+    """
+    if "name" in payload:
+        existing_game["name"] = payload["name"]
+    if "difficulty" in payload:
+        existing_game["difficulty"] = payload["difficulty"]
+    if "board" in payload:
+        existing_game["board"] = payload["board"]
 
-    for i in range(size):
-        for j in range(size):
-            if i + 4 < size and j + 4 < size:
-                major_diag = [board[i + k][j + k] for k in range(5)]
-                if check_line(major_diag) == "win":
-                    return True
-                if check_potential and check_line(major_diag) == "potential":
-                    return True
+    # Re-classify
+    game_state = classify_board(existing_game["board"])
+    existing_game["gameState"] = game_state
+    existing_game["updatedAt"] = timezone.now()
 
-            if i + 4 < size and j - 4 >= 0:
-                minor_diag = [board[i + k][j - k] for k in range(5)]
-                if check_line(minor_diag) == "win":
-                    return True
-                if check_potential and check_line(minor_diag) == "potential":
-                    return True
-
-    return False
+    return existing_game
