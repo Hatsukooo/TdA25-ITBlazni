@@ -1,112 +1,63 @@
-# TdA25-ITBlázni
+# Tour de App - Flask boiler plate
 
-## 1. Název a členové týmu
+Šablona pro vývoj aplikace pro Tour de App společně s vytvořením a nahráním výstupu.
 
-**Název týmu:** ITBlázni  
-**Členové týmu:**
-- Jan Novák (Frontend)
-- Petr Svoboda (Backend)
-- Jana Malá (DevOps)
+## Lokální spuštění
 
-Tento tým se účastní soutěže Tour de App pro rok 2025.
+### Python
 
-## 2. Jaké technologie používá
+#### Prerekvizity
 
-**Jazyk:** Python 3.9+  
-**Framework:** Django 4.x + Django REST Framework  
-**Databáze:** SQLite (ve výchozím nastavení)  
-**Frontend:** HTML, CSS, JavaScript (případně React/Vue, pokud používáte)  
-**Docker:** Pro kontejnerizaci a nasazení  
-**GitHub Actions:** (Pokud jste nastavili CI/CD)
+- Python 3 (pokud nemáš python nainstalovaný, podívej se na https://naucse.python.cz/course/pyladies/),
+- pipenv ( `pip install --user pipenv` pro Windows, https://pypi.org/project/pipenv/#installation pro Linux dle distribuce).
+  (Pokud se při instalaci na Windows vyskytla [chyba s proměnnou PATH](PATH_warning.md).)
 
-**Případně další použité knihovny:**
-- pytest / unittest (pokud testujete lokálně)
-- django-filter (pokud využíváte server-side filtrování)
+#### Spuštění
 
-## 3. Jak se aplikace spouští
-
-### 3.1 Spuštění bez Dockeru
-
-Naklonování repozitáře:
-```sh
-git clone https://github.com/Hatsukooo/TdA25-ITBlazni.git
-cd TdA25-ITBlazni
+```
+pipenv install
+pipenv shell
 ```
 
-Vytvoření a aktivace virtuálního prostředí (doporučeno):
-```sh
-python3 -m venv venv
-source venv/bin/activate        # macOS/Linux
-# nebo venv\Scripts\activate    # Windows
+Windows
+
+```
+flask --app app\app.py init-db
+flask --app app\app.py run
 ```
 
-Instalace závislostí:
-```sh
-pip install -r requirements.txt
+(`flask is not recognized as an internal or external command, operable program or batch file.` -> Nainstalujte Flask pomocí `pip install Flask`)
+
+Linux / macOS
+
+```
+flask --app app/app.py init-db
+flask --app app/app.py run
 ```
 
-Migrace databáze:
-```sh
-python manage.py migrate
+Aplikace bude přístupná na `http://127.0.0.1:5000`
+
+### Docker
+
+#### Prerekvizity
+
+- Docker.
+- (Windows) aktivovaný wsl2.
+  Návod zde: https://tourdeapp.cz/vzdelavaci-materialy/2738-instalace-dockeru-na-windows
+
+#### Spuštění
+
+```
+docker build . -t tda-flask
+docker run -p 8080:80 -v ${PWD}:/app tda-flask
 ```
 
-Spuštění vývojového serveru:
-```sh
-python manage.py runserver
-```
+Aplikace bude přístupná na `http://127.0.0.1:8080`
 
-Aplikace bude dostupná na adrese [http://127.0.0.1:8000](http://127.0.0.1:8000) (případně [http://localhost:8000](http://localhost:8000)).
+## Virtuální prostředí a správa balíčků
 
-### 3.2 Spuštění s Dockerem
+Jak využít nástroj [Pipenv](https://pypi.org/project/pipenv/), který kombinuje pip a virtualenv.
 
-Naklonování repozitáře:
-```sh
-git clone https://github.com/Hatsukooo/TdA25-ITBlazni.git
-cd TdA25-ITBlazni
-```
+## Odevzdání
 
-Vytvoření Docker image:
-```sh
-docker build -t tda25-itblazni .
-```
-
-Spuštění kontejneru:
-```sh
-docker run -p 8000:8000 tda25-itblazni
-```
-
-Poté navštivte [http://localhost:8000](http://localhost:8000), kde poběží vaše aplikace.
-
-## 4. Struktura aplikace a hlavní funkcionality
-
-### Backend (Django REST Framework)
-
-Adresář `api/` obsahuje soubory:
-- `models.py`: definuje datový model hry (Game).
-- `views.py`: implementuje funkce (např. `game_list`, `game_detail`) pro CRUD operace (vytváření, čtení, aktualizace, mazání).
-- `serializers.py`: definuje třídu `GameSerializer` pro serializaci dat.
-- `urls.py`: mapuje cesty jako `/api/v1/games` na konkrétní view funkce.
-
-Herní logika (např. validace 15×15, počtu X/O, detekce koncovky, atd.) může být v `api/utils/game_logic.py`.
-
-Typické endpointy:
-- `GET /api/v1/games`: získání seznamu her (podporuje filtrování podle názvu, obtížnosti, času poslední úpravy).
-- `POST /api/v1/games`: vytvoření nové hry.
-- `GET /api/v1/games/<uuid>`: získání detailu konkrétní hry.
-- `PUT /api/v1/games/<uuid>`: aktualizace existující hry.
-- `DELETE /api/v1/games/<uuid>`: mazání hry.
-
-### Frontend
-
-Složka `templates/` (pokud používáte Django templating) a `static/` (CSS, JS).
-- `game_list.html`: zobrazuje seznam uložených “úloh” (her) s filtry (název, obtížnost, doba poslední úpravy). Každá “karta” má název, obtížnost, tlačítko pro spuštění hry, pro úpravu a pro smazání.
-- `script.js`: obsahuje logiku pro volání API, renderování seznamu her, aplikaci filtrů a další interaktivní funkce (např. mazání hry, témata vzhledu, atd.).
-
-### Koncovka / Classifikace
-
-Aplikace umí klasifikovat stav hry na opening (zahájení), midgame (střední hra) nebo endgame (koncovka). Splňuje požadavky na validitu hry (jen symboly X, O, prázdné, 15×15 rozměr, X začíná, atd.).
-
-### Další
-
-- Soubor `Dockerfile`: obsahuje instrukce pro sestavení Docker image.
-- Soubor `requirements.txt`: seznam Python balíčků pro instalaci.
+Jak odevzdat svojí aplikaci můžete najít v našich [vzdělávacích materiálech](https://tourde.app/vzdelavaci-materialy/jak-odevzdavat)

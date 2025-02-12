@@ -1,14 +1,4 @@
+instance/
 local/
 .idea/
-tests
-venv
-.venv
-
-.pytest_cache/
-api/__pycache__/
-project/.pytest_cache/
-project/__pycache__/
-/api/migrations
-*.pyc
-/logs
-logs/db.log
+app/__pycache__/

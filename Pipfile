@@ -4,7 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-django = "*"
+flask = "*"
+colorama = "*"
 
 [dev-packages]
 

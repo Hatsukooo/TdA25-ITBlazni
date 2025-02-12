@@ -1,5 +1,4 @@
 #!/bin/sh
-python3 manage.py makemigrations
-python3 manage.py migrate
 
-python3 manage.py runserver 0.0.0.0:8000
+python3 -m flask --app app/app.py init-db
+python3 -m flask --app app/app.py run --host=0.0.0.0 --port=80
