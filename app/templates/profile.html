@@ -1,0 +1,76 @@
+ 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>ITBlázni - Profile</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stylesheet.css') }}">
+</head>
+<body>
+
+    <main class="centered-container">
+        <h1 class="title">Your <span class="highlight">Profile</span></h1>
+        
+        <div class="profile-card">
+            <img id="profilePicture" src="" alt="Profile Picture" class="profile-pic">
+            <p><strong>Username:</strong> <span id="username"></span></p>
+            <p><strong>Email:</strong> <span id="email"></span></p>
+        </div>
+
+        <h3>Update Profile</h3>
+        <form id="updateProfileForm" class="form-container">
+            <label for="newUsername">New Username:</label>
+            <input type="text" id="newUsername" name="username" required>
+            
+            <label for="newEmail">New Email:</label>
+            <input type="email" id="newEmail" name="email" required>
+            
+            <button type="submit" class="cta-button">Update</button>
+        </form>
+
+        <h3>Change Password</h3>
+        <form id="changePasswordForm" class="form-container">
+            <label for="currentPassword">Current Password:</label>
+            <input type="password" id="currentPassword" name="current_password" required>
+
+            <label for="newPassword">New Password:</label>
+            <input type="password" id="newPassword" name="new_password" required>
+
+            <button type="submit" class="cta-button">Change Password</button>
+        </form>
+
+        <h3>Change Profile Picture</h3>
+        <form id="uploadIconForm" enctype="multipart/form-data" class="form-container">
+            <input type="file" id="profileIcon" name="file" accept="image/*">
+            <button type="submit" class="cta-button">Upload</button>
+        </form>
+
+        <button id="logout" class="logout-button">Logout</button>
+    </main>
+
+    <script>
+        async function fetchProfile() {
+            let response = await fetch("/profile");
+            if (response.ok) {
+                let data = await response.json();
+                document.getElementById("username").innerText = data.username;
+                document.getElementById("email").innerText = data.email;
+                document.getElementById("profilePicture").src = "/static/profile_pictures/" + data.profile_picture;
+            } else {
+                alert("Please log in first.");
+                window.location.href = "/login";
+            }
+        }
+
+        document.getElementById("logout").onclick = async function() {
+            await fetch("/logout", { method: "POST" });
+            alert("Logged out!");
+            window.location.href = "/login";
+        }
+
+        fetchProfile();
+    </script>
+
+</body>
+</html>

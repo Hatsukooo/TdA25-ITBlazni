@@ -1,0 +1,6 @@
+ 
+flask
+flask-session
+flask-sqlite3
+werkzeug
+click

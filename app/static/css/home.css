@@ -1,0 +1,103 @@
+/* Home Page Styles */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Dosis', sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+/* Centered Content */
+.centered-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+}
+
+.title {
+    font-size: var(--font-size-xlarge);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    font-size: var(--font-size-medium);
+    color: var(--secondary-color);
+}
+
+/* Buttons */
+.cta-button {
+    background-color: var(--primary-color);
+    color: var(--button-hover-text);
+    border: none;
+    padding: var(--btn-padding);
+    font-size: var(--font-size-base);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background 0.3s ease;
+    text-decoration: none;
+}
+
+.cta-button:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Navbar */
+.navbar {
+    background-color: var(--primary-color);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links li {
+    display: inline;
+}
+
+.nav-links a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: var(--font-size-medium);
+    font-weight: var(--font-weight-semibold);
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--secondary-color);
+}
+
+/* Footer */
+.footer {
+    background-color: var(--primary-color);
+    padding: 15px;
+    color: var(--text-color);
+    font-size: var(--font-size-small);
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .nav-links {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .cta-button {
+        padding: 10px 15px;
+        font-size: var(--font-size-medium);
+    }
+}

@@ -1,46 +1,43 @@
-# app/__init__.py
-
 import os
-from flask import Flask, render_template
+from flask import Flask
+from flask_session import Session
 from . import db
-from .game_logic import classify_game_state, get_empty_board
-
-# Import your blueprints
 from .main import main_bp
 from .games import game_bp
 from .logs import log_bp
+from .auth import auth_bp
+from .account import account_bp
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
-    
-    # Config
+
+    # ✅ Ensure DATABASE is set
     app.config.from_mapping(
         SECRET_KEY='change-this-secret',
-        DATABASE=os.path.join(app.instance_path, 'flask_app.sqlite'),
+        DATABASE=os.path.join(app.instance_path, 'flask_app.sqlite'),  # Ensure this is set
+        SESSION_TYPE='filesystem'
     )
 
-    # Ensure instance folder exists
+    # ✅ Ensure instance folder exists
     try:
-        os.makedirs(app.instance_path)
+        os.makedirs(app.instance_path, exist_ok=True)
     except OSError:
         pass
 
-    # Initialize DB
+    # ✅ Initialize DB before registering blueprints
     db.init_app(app)
 
-    # Register blueprints
-    app.register_blueprint(main_bp)  
-    app.register_blueprint(game_bp)  # Your /api routes for games
-    app.register_blueprint(log_bp)   # For logs viewer
-
-    @app.errorhandler(404)
-    def page_not_found(e):
-        return render_template('404.html'), 404
-
+    # ✅ Register Blueprints AFTER DB setup
+    app.register_blueprint(main_bp)
+    app.register_blueprint(game_bp)
+    app.register_blueprint(log_bp)
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(account_bp)
 
     return app
 
-# Optional: if you want to run "python -m app" directly:
+
+
 if __name__ == "__main__":
     application = create_app()
     application.run(debug=True)

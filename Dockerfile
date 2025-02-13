@@ -1,19 +1,22 @@
-# syntax=docker/dockerfile:1
+ 
+# Use official Python image as base
+FROM python:3.10
 
-FROM python:3.10-buster
-
+# Set the working directory in the container
 WORKDIR /app
 
-RUN pip install pipenv
+# Copy the application files into the container
+COPY . /app
 
-COPY Pipfile .
-COPY Pipfile.lock .
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pipenv install --system --deploy
+# Expose the port Flask runs on
+EXPOSE 5000
 
-COPY . .
+# Set environment variables
+ENV FLASK_APP=app
+ENV FLASK_RUN_HOST=0.0.0.0
 
-EXPOSE 80
-
-CMD ["./start.sh"]
-
+# Run the application
+CMD ["flask", "run"]
